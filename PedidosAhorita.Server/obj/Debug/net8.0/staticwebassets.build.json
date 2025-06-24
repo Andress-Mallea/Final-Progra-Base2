@@ -1,0 +1,24 @@
+{
+  "Version": 1,
+  "Hash": "PwMJWkafVxv9BFh8GfKWGET02mEKJ8FyfRbILbUADm8=",
+  "Source": "PedidosAhorita.Server",
+  "BasePath": "_content/PedidosAhorita.Server",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [
+    {
+      "Identity": "C:\\Users\\MSI LAPTOP\\Desktop\\ExamenFinal-Progra2\\PedidosAhorita\\pedidosahorita.client\\pedidosahorita.client.esproj",
+      "Version": 2,
+      "Source": "pedidosahorita.client",
+      "GetPublishAssetsTargets": "GetCurrentProjectPublishStaticWebAssetItems",
+      "AdditionalPublishProperties": "",
+      "AdditionalPublishPropertiesToRemove": "WebPublishProfileFile;TargetFramework;RuntimeIdentifier;SelfContained",
+      "GetBuildAssetsTargets": "GetCurrentProjectBuildStaticWebAssetItems",
+      "AdditionalBuildProperties": "",
+      "AdditionalBuildPropertiesToRemove": "WebPublishProfileFile;TargetFramework;RuntimeIdentifier;SelfContained"
+    }
+  ],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}
