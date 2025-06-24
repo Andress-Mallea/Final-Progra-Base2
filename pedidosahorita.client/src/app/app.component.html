@@ -1,0 +1,766 @@
+﻿<style>
+  /* Estilos generales */
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: black;
+    color: #333;
+  }
+
+  .container {
+    width: 80%;
+    margin: auto;
+    overflow: hidden;
+  }
+
+  /* Estilos del encabezado */
+  header {
+    background: #333;
+    color: #fff;
+    padding-top: 30px;
+    min-height: 70px;
+    border-bottom: 3px solid #e8491d;
+  }
+
+  header a {
+    color: #fff;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  header ul {
+    margin: 0;
+    padding: 0;
+  }
+
+  header li {
+    float: left;
+    display: inline;
+    padding: 0 20px 0 20px;
+  }
+
+  header #branding {
+    float: left;
+  }
+
+  header #branding h1 {
+    margin: 0;
+  }
+
+  header nav {
+    float: right;
+    margin-top: 10px;
+    /* Clear float of search-bar if it's placed before nav in HTML */
+    clear: right;
+  }
+
+  header .highlight,
+  header .current a {
+    color: #e8491d;
+    font-weight: bold;
+  }
+
+  header a:hover {
+    color: #ccc;
+    font-weight: bold;
+  }
+
+  /* Estilos de la sección principal */
+  #showcase {
+    min-height: 400px;
+    background: black;
+    text-align: center;
+    color: #fff;
+  }
+
+  #showcase h1 {
+    margin-top: 100px;
+    font-size: 55px;
+    margin-bottom: 10px;
+  }
+
+  #showcase p {
+    font-size: 20px;
+  }
+
+  /* Estilos del pie de página */
+  footer {
+    padding: 20px;
+    color: #fff;
+    background-color: #e8491d;
+    text-align: center;
+  }
+    #product-list {
+    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    background-color: #f4f4f4; /* Fondo claro para la sección de productos */
+    color: #333; /* Color de texto oscuro para contraste */
+  }
+
+  .product-item {
+    width: 30%;
+    margin-bottom: 20px;
+    padding: 20px; /* Aumenta el padding para un mejor aspecto */
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    text-align: center;
+    background-color: #fff; /* Fondo blanco para cada tarjeta de producto */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Sombra suave para efecto de elevación */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Distribuye el espacio entre el contenido y el botón */
+  }
+
+  .product-item img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 15px; /* Espacio debajo de la imagen */
+  }
+
+  .product-item h3 {
+    font-size: 1.5em; /* Aumenta el tamaño del título */
+    margin-top: 10px;
+    margin-bottom: 5px;
+    color: #333;
+  }
+
+  .product-item p {
+    font-size: 1em;
+    color: #666;
+    margin-bottom: 15px; /* Espacio debajo de la descripción */
+    flex-grow: 1; /* Permite que la descripción ocupe el espacio restante */
+  }
+
+  .product-item .product-price {
+    font-size: 1.3em;
+    font-weight: bold;
+    color: #e8491d; /* Color del precio similar al highlight */
+    margin-bottom: 15px;
+  }
+
+  /* Contenedor para los botones de acción del producto */
+  .product-actions {
+    display: flex;
+    justify-content: center; /* Centra los botones horizontalmente */
+    gap: 10px; /* Espacio entre los botones */
+    margin-top: 15px; /* Espacio encima de los botones */
+  }
+
+  .product-item .add-to-cart-button,
+  .product-item .description-button {
+    background-color: #e8491d;
+    color: white;
+    border: none;
+    padding: 10px 15px; /* Padding por defecto */
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.1em;
+    transition: background-color 0.3s ease;
+    flex-grow: 1; /* Permite que los botones se estiren y llenen el espacio */
+  }
+
+  .product-item .add-to-cart-button:hover,
+  .product-item .description-button:hover {
+    background-color: #c63d17;
+  }
+
+  .product-item .description-button {
+    padding: 8px 12px; /* Menor padding para hacerlo más pequeño */
+    font-size: 0.9em; /* Menor tamaño de fuente */
+  }
+
+
+  /* Estilos de la barra de búsqueda */
+  .search-bar {
+    float: right;
+    margin-top: 15px;
+    margin-right: 10px;
+    position: relative; /* Add position relative for icon positioning */
+    display: flex; /* Use flexbox for alignment */
+    align-items: center; /* Center items vertically */
+    width: 1000px; /* Set a fixed width for the search bar container */
+  }
+
+  .search-bar input[type="text"] {
+    padding: 7px 12px 7px 35px; /* Adjust left padding for the icon */
+    border-radius: 5px;
+    border: 1px solid #666;
+    background-color: #333;
+    color: white;
+    font-size: 1em;
+    width: 100%; /* Make input fill available width */
+  }
+
+  .search-bar i {
+    position: absolute; /* Position the icon absolutely */
+    left: 10px; /* Adjust left position */
+    color: #fff;
+    font-size: 1em;
+  }
+
+  /* Estilos para el área de acciones de usuario (iconos y botones) */
+  .user-action-area {
+    float: right;
+    margin-top: 10px;
+    clear: both; /* Ensures this area starts below the main nav and search bar */
+  }
+
+  .user-action-area ul {
+    list-style: none; /* Remove bullet points */
+    margin: 0;
+    padding: 0;
+    display: inline-block; /* Allows float to work correctly */
+  }
+
+  .user-action-area ul li {
+    float: left;
+    display: inline-block;
+    padding: 0 10px; /* Slightly smaller padding for more items */
+    font-size: 1.1em;
+  }
+
+  .user-action-area ul li a {
+    text-transform: none; /* Keep natural casing for "Mi Cuenta" etc. */
+    font-weight: normal;
+  }
+
+  .user-action-area ul li a:hover {
+    color: #e8491d;
+  }
+
+  /* Estilos para el botón de vender dentro del user-action-area */
+  .user-action-area .sell-button {
+    background-color: #e8491d;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    margin-left: 20px;
+    float: left; /* Aligns next to the user icons list */
+  }
+
+  .user-action-area .sell-button:hover {
+    background-color: #c63d17;
+  }
+
+  /* Estilos para los enlaces de autenticación (debajo de otros) */
+  .auth-links-list {
+    clear: both; /* Forces this list to a new line */
+    float: right; /* Aligns it to the right */
+    margin-top: 10px; /* Spacing from the row above */
+  }
+
+  /* Estilos para el menú del carrito */
+  #shopping-cart-menu {
+    background-color: #2a2a2a; /* Color de fondo oscuro similar al header */
+    color: #fff;
+    padding: 20px;
+    margin: 20px auto;
+    width: 80%;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  #shopping-cart-menu h2 {
+    text-align: center;
+    color: #e8491d;
+    margin-bottom: 20px;
+  }
+
+  #shopping-cart-menu ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  #shopping-cart-menu ul li {
+    background-color: #3e3e3e; /* Un poco más claro que el fondo del menú */
+    margin-bottom: 10px;
+    padding: 15px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.1em;
+  }
+
+  #shopping-cart-menu ul li .item-details {
+    flex-grow: 1;
+  }
+
+  #shopping-cart-menu ul li .item-actions button {
+    background-color: #e8491d;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px;
+    font-size: 0.9em;
+  }
+
+  #shopping-cart-menu ul li .item-actions button:hover {
+    background-color: #c63d17;
+  }
+
+  #shopping-cart-menu .buy-button-container {
+    text-align: center;
+    margin-top: 30px;
+  }
+
+  #shopping-cart-menu .buy-button {
+    background-color: #4CAF50; /* Un color verde para el botón de compra */
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.2em;
+    transition: background-color 0.3s ease;
+  }
+
+  #shopping-cart-menu .buy-button:hover {
+    background-color: #45a049;
+  }
+
+  /* Estilos para el menú de venta */
+  #sell-product-menu {
+    background-color: #2a2a2a;
+    color: #fff;
+    padding: 20px;
+    margin: 20px auto;
+    width: 80%;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  #sell-product-menu h2 {
+    text-align: center;
+    color: #e8491d;
+    margin-bottom: 20px;
+  }
+
+  #sell-product-menu .form-group {
+    margin-bottom: 15px;
+  }
+
+  #sell-product-menu label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #fff;
+  }
+
+  #sell-product-menu input[type="text"],
+  #sell-product-menu textarea,
+  #sell-product-menu input[type="number"] {
+    width: calc(100% - 20px); /* Ajuste para padding */
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #666;
+    background-color: #333;
+    color: white;
+    font-size: 1em;
+  }
+
+  #sell-product-menu textarea {
+    resize: vertical; /* Permite redimensionar verticalmente */
+    min-height: 80px;
+  }
+
+  #sell-product-menu button {
+    background-color: #e8491d;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.2em;
+    transition: background-color 0.3s ease;
+    display: block; /* Ocupa todo el ancho */
+    width: 100%;
+    margin-top: 20px;
+  }
+
+  #sell-product-menu button:hover {
+    background-color: #c63d17;
+  }
+
+  /* Estilos para el menú de detalle de producto */
+  #product-detail-menu {
+    background-color: #2a2a2a;
+    color: #fff;
+    padding: 30px; /* Más padding para los detalles */
+    margin: 20px auto;
+    width: 70%; /* Un poco más estrecho para centralizar detalles */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: left; /* Alineación de texto a la izquierda para la descripción */
+  }
+
+  #product-detail-menu h2 {
+    text-align: center;
+    color: #e8491d;
+    margin-bottom: 25px;
+    font-size: 2.2em; /* Título más grande */
+  }
+
+  #product-detail-menu .detail-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    display: block; /* Para centrar la imagen si es más pequeña */
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  #product-detail-menu p {
+    font-size: 1.1em;
+    line-height: 1.6;
+    margin-bottom: 15px;
+    color: #ccc; /* Un color más suave para el texto */
+  }
+
+  #product-detail-menu .detail-price {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #e8491d;
+    text-align: right; /* Precio alineado a la derecha */
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
+  #product-detail-menu .detail-actions {
+    text-align: center;
+    margin-top: 30px;
+  }
+
+  #product-detail-menu .detail-actions button {
+    background-color: #e8491d;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.2em;
+    transition: background-color 0.3s ease;
+    margin: 0 10px; /* Espacio entre botones */
+  }
+
+  #product-detail-menu .detail-actions button:hover {
+    background-color: #c63d17;
+  }
+
+  /* Estilos para el menú de pago */
+  #payment-menu {
+    background-color: #2a2a2a;
+    color: #fff;
+    padding: 30px;
+    margin: 20px auto;
+    width: 80%;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+  }
+
+  #payment-menu h2 {
+    color: #e8491d;
+    margin-bottom: 30px;
+  }
+
+  .payment-options {
+    margin-bottom: 30px;
+  }
+
+  .payment-options button {
+    background-color: #3e3e3e;
+    color: white;
+    border: 1px solid #666;
+    padding: 12px 25px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.1em;
+    margin: 0 10px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+  }
+
+  .payment-options button:hover {
+    background-color: #555;
+    border-color: #e8491d;
+  }
+
+  .payment-options button.active {
+    background-color: #e8491d;
+    border-color: #e8491d;
+    font-weight: bold;
+  }
+
+  .payment-details {
+    background-color: #3e3e3e;
+    padding: 25px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+  }
+
+  .payment-details h3 {
+    color: #e8491d;
+    margin-bottom: 20px;
+  }
+
+  .qr-code-image {
+    max-width: 150px;
+    height: auto;
+    margin: 15px auto;
+    display: block;
+    border: 5px solid #fff; /* Border to make it stand out */
+  }
+
+  .payment-details .form-group {
+    margin-bottom: 15px;
+    text-align: left;
+  }
+
+  .payment-details .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #fff;
+    font-weight: normal;
+  }
+
+  .payment-details .form-group input[type="text"],
+  .payment-details .form-group input[type="number"] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #666;
+    background-color: #2a2a2a;
+    color: white;
+    font-size: 1em;
+  }
+
+  .form-group-inline {
+    display: flex;
+    gap: 20px;
+  }
+
+  .form-group-inline .form-group {
+    flex: 1;
+  }
+
+  .total-amount {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #e8491d;
+    margin-top: 25px;
+    text-align: right;
+  }
+
+  .payment-action-buttons button {
+    margin: 0 10px;
+    padding: 12px 30px;
+    font-size: 1.1em;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .payment-action-buttons .buy-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+  }
+
+  .payment-action-buttons .buy-button:hover {
+    background-color: #45a049;
+  }
+
+  .payment-action-buttons .back-button {
+    background-color: #666;
+    color: white;
+    border: none;
+  }
+
+  .payment-action-buttons .back-button:hover {
+    background-color: #555;
+  }
+</style>
+
+<header>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <div class="container">
+    <div id="branding">
+      <h1>
+        <span class="highlight">Pedidos</span>
+        Ahorita
+      </h1>
+    </div>
+    <!-- Navigation principal: Floats right and positions below the search bar if needed -->
+    <nav>
+      <ul>
+        <li [class.current]="currentActiveLink === 'Inicio'"><a href="index.html" title="Inicio" (click)="setActiveLink('Inicio')"><i class="fas fa-home"></i> Inicio</a></li>
+        <li [class.current]="currentActiveLink === 'Productos'"><a href="#" title="Productos" (click)="setActiveLink('Productos')"><i class="fas fa-box"></i> Productos</a></li>
+        <!-- Shopping Cart with click to show/hide the menu -->
+        <li [class.current]="currentActiveLink === 'Carrito'"><a href="#" title="Carrito de Compras" (click)="toggleShoppingCartMenu()"><i class="fas fa-shopping-cart"></i> Carrito ({{ cartItems.length }})</a></li>
+        <li [class.current]="currentActiveLink === 'Vender'"><a href="#" title="Vender" (click)="setActiveLink('Vender')"><i class="fas fa-dollar-sign"></i> Vender</a></li>
+        <li [class.current]="currentActiveLink === 'Mi Cuenta'"><a href="#" title="Mi Cuenta/Perfil" (click)="setActiveLink('Mi Cuenta')"><i class="fas fa-user-circle"></i> Mi Cuenta</a></li>
+      </ul>
+    </nav>
+
+    <!-- User actions area: Floats right and positions below the main nav and search bar -->
+    <div class="user-action-area">
+      <!-- Bottom row: Login / Register -->
+      <ul class="auth-links-list">
+        <li><a href="#" title="Iniciar Sesión"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</a></li>
+        <li><a href="#" title="Registrarse"><i class="fas fa-user-plus"></i> Registrarse</a></li>
+      </ul>
+    </div>
+        <!-- Search bar: Floats right at the top -->
+    <div class="search-bar">
+      <i class="fas fa-search"></i> <!-- Icono de lupa -->
+      <input type="text" placeholder="Buscar productos..." />
+    </div>
+
+  </div>
+</header>
+
+<section id="showcase">
+  <div class="container">
+    <h1>Los mejores productos al mejor precio</h1>
+    <p>Encuentra todo lo que necesitas y más.</p>
+  </div>
+</section>
+
+<!-- New Shopping Cart Menu - Visible only when currentActiveLink is 'Carrito' -->
+<section id="shopping-cart-menu" class="container" *ngIf="currentActiveLink === 'Carrito' && !showPaymentMenu">
+  <h2>Tu Carrito de Compras</h2>
+  <ul *ngIf="cartItems.length > 0; else emptyCart">
+    <li *ngFor="let item of cartItems">
+      <div class="item-details">
+        <strong>{{ item.name }}</strong> - ${{ item.price.toFixed(2) }}
+      </div>
+      <div class="item-actions">
+        <button>Ver</button>
+        <button (click)="removeFromCart(item)">Quitar</button>
+      </div>
+    </li>
+  </ul>
+  <ng-template #emptyCart>
+    <p style="text-align: center; color: #ccc;">El carrito está vacío.</p>
+  </ng-template>
+  <div class="buy-button-container" *ngIf="cartItems.length > 0">
+    <button class="buy-button" (click)="proceedToPayment()">Comprar Ahora</button>
+  </div>
+</section>
+
+<!-- Sell Product Menu - Visible only when currentActiveLink is 'Vender' -->
+<section id="sell-product-menu" class="container" *ngIf="currentActiveLink === 'Vender'">
+  <h2>Subir un Nuevo Producto</h2>
+  <form>
+    <div class="form-group">
+      <label for="productName">Nombre del Producto:</label>
+      <input type="text" id="productName" name="productName" required>
+    </div>
+    <div class="form-group">
+      <label for="productDescription">Descripción:</label>
+      <textarea id="productDescription" name="productDescription" required></textarea>
+    </div>
+    <div class="form-group">
+      <label for="productPrice">Precio:</label>
+      <input type="number" id="productPrice" name="productPrice" min="0.01" step="0.01" required>
+    </div>
+    <div class="form-group">
+      <label for="productImage">Imagen del Producto (URL):</label>
+      <input type="text" id="productImage" name="productImage">
+    </div>
+    <button type="submit" (click)="uploadProduct()">Subir Producto</button>
+  </form>
+</section>
+
+<!-- Product Detail Menu - Visible only when currentActiveLink is 'ProductDetail' and a product is selected -->
+<section id="product-detail-menu" class="container" *ngIf="currentActiveLink === 'ProductDetail' && selectedProduct">
+  <h2>{{ selectedProduct.name }}</h2>
+  <img src="https://placehold.co/600x400/cccccc/333333?text={{ selectedProduct.name }}" alt="{{ selectedProduct.name }}" class="detail-image">
+  <p><strong>Descripción:</strong> {{ selectedProduct.description }}</p>
+  <p class="detail-price">Precio: ${{ selectedProduct.price.toFixed(2) }}</p>
+  <div class="detail-actions">
+    <button (click)="addToCart(selectedProduct)">Agregar al Carrito</button>
+    <button (click)="setActiveLink('Productos')">Volver a Productos</button>
+  </div>
+</section>
+
+<!-- Payment Menu - Visible only when showPaymentMenu is true -->
+<section id="payment-menu" class="container" *ngIf="showPaymentMenu">
+  <h2>Selecciona tu Método de Pago</h2>
+  <div class="payment-options">
+    <button (click)="selectPaymentMethod('qr')" [class.active]="paymentMethod === 'qr'">
+      <i class="fas fa-qrcode"></i> QR
+    </button>
+    <button (click)="selectPaymentMethod('card')" [class.active]="paymentMethod === 'card'">
+      <i class="fas fa-credit-card"></i> Tarjeta
+    </button>
+  </div>
+
+  <div class="payment-details">
+    <div *ngIf="paymentMethod === 'qr'">
+      <h3>Escanea para Pagar</h3>
+      <img src="https://placehold.co/200x200/cccccc/333333?text=QR+Code" alt="QR Code" class="qr-code-image">
+      <p>Escanea este código QR con tu aplicación de pago.</p>
+    </div>
+
+    <div *ngIf="paymentMethod === 'card'">
+      <h3>Datos de la Tarjeta</h3>
+      <form>
+        <div class="form-group">
+          <label for="cardNumber">Número de Tarjeta:</label>
+          <input type="text" id="cardNumber" placeholder="XXXX XXXX XXXX XXXX" required>
+        </div>
+        <div class="form-group">
+          <label for="cardName">Nombre en la Tarjeta:</label>
+          <input type="text" id="cardName" placeholder="Nombre completo" required>
+        </div>
+        <div class="form-group-inline">
+          <div class="form-group">
+            <label for="cardExpiry">Fecha de Vencimiento:</label>
+            <input type="text" id="cardExpiry" placeholder="MM/AA" required>
+          </div>
+          <div class="form-group">
+            <label for="cardCVC">CVC:</label>
+            <input type="text" id="cardCVC" placeholder="XXX" required>
+          </div>
+        </div>
+        <p class="total-amount">Total a Pagar: ${{ getTotalCartAmount().toFixed(2) }}</p>
+      </form>
+    </div>
+  </div>
+
+  <div class="payment-action-buttons">
+    <button class="buy-button" (click)="processPayment()" [disabled]="!paymentMethod">Pagar</button>
+    <button class="back-button" (click)="closePaymentMenu()">Volver al Carrito</button>
+  </div>
+</section>
+
+
+<!-- Product List - Visible only when currentActiveLink is 'Inicio' or 'Productos' -->
+<section id="product-list" *ngIf="currentActiveLink === 'Inicio' || currentActiveLink === 'Productos'">
+  <!-- The *ngFor directive is now applied to the product-item div -->
+  <div class="product-item" *ngFor="let product of products">
+    <!-- Placeholder image. You can replace with actual product images later. -->
+    <img src="https://placehold.co/300x200/cccccc/333333?text=Producto" alt="{{ product.name }}">
+    <h3>{{ product.name }}</h3>
+    <p>{{ product.description }}</p>
+    <p class="product-price">${{ product.price.toFixed(2) }}</p>
+    <div class="product-actions">
+      <button class="add-to-cart-button" (click)="addToCart(product)">Agregar al carrito</button>
+      <button class="description-button" (click)="viewProductDetail(product)">Descripción</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>Pedidos ahorita Progra exam &copy; 2025</p>
+</footer>
