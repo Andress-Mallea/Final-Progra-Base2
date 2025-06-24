@@ -1,4 +1,4 @@
-﻿<style>
+<style>
   /* Estilos generales */
   body {
     font-family: Arial, sans-serif;
@@ -144,9 +144,9 @@
   /* Contenedor para los botones de acción del producto */
   .product-actions {
     display: flex;
-    justify-content: center; /* Centra los botones horizontalmente */
-    gap: 10px; /* Espacio entre los botones */
-    margin-top: 15px; /* Espacio encima de los botones */
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
   }
 
   .product-item .add-to-cart-button,
@@ -154,12 +154,12 @@
     background-color: #e8491d;
     color: white;
     border: none;
-    padding: 10px 15px; /* Padding por defecto */
+    padding: 10px 15px;
     border-radius: 5px;
     cursor: pointer;
     font-size: 1.1em;
     transition: background-color 0.3s ease;
-    flex-grow: 1; /* Permite que los botones se estiren y llenen el espacio */
+    flex-grow: 1;
   }
 
   .product-item .add-to-cart-button:hover,
@@ -168,8 +168,8 @@
   }
 
   .product-item .description-button {
-    padding: 8px 12px; /* Menor padding para hacerlo más pequeño */
-    font-size: 0.9em; /* Menor tamaño de fuente */
+    padding: 8px 12px;
+    font-size: 0.9em;
   }
 
 
@@ -178,25 +178,25 @@
     float: right;
     margin-top: 15px;
     margin-right: 10px;
-    position: relative; /* Add position relative for icon positioning */
-    display: flex; /* Use flexbox for alignment */
-    align-items: center; /* Center items vertically */
-    width: 1000px; /* Set a fixed width for the search bar container */
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 1000px;
   }
 
   .search-bar input[type="text"] {
-    padding: 7px 12px 7px 35px; /* Adjust left padding for the icon */
+    padding: 7px 12px 7px 35px;
     border-radius: 5px;
     border: 1px solid #666;
     background-color: #333;
     color: white;
     font-size: 1em;
-    width: 100%; /* Make input fill available width */
+    width: 100%;
   }
 
   .search-bar i {
-    position: absolute; /* Position the icon absolutely */
-    left: 10px; /* Adjust left position */
+    position: absolute;
+    left: 10px;
     color: #fff;
     font-size: 1em;
   }
@@ -205,25 +205,25 @@
   .user-action-area {
     float: right;
     margin-top: 10px;
-    clear: both; /* Ensures this area starts below the main nav and search bar */
+    clear: both;
   }
 
   .user-action-area ul {
-    list-style: none; /* Remove bullet points */
+    list-style: none;
     margin: 0;
     padding: 0;
-    display: inline-block; /* Allows float to work correctly */
+    display: inline-block;
   }
 
   .user-action-area ul li {
     float: left;
     display: inline-block;
-    padding: 0 10px; /* Slightly smaller padding for more items */
+    padding: 0 10px;
     font-size: 1.1em;
   }
 
   .user-action-area ul li a {
-    text-transform: none; /* Keep natural casing for "Mi Cuenta" etc. */
+    text-transform: none;
     font-weight: normal;
   }
 
@@ -241,7 +241,7 @@
     cursor: pointer;
     font-size: 1em;
     margin-left: 20px;
-    float: left; /* Aligns next to the user icons list */
+    float: left;
   }
 
   .user-action-area .sell-button:hover {
@@ -250,14 +250,14 @@
 
   /* Estilos para los enlaces de autenticación (debajo de otros) */
   .auth-links-list {
-    clear: both; /* Forces this list to a new line */
-    float: right; /* Aligns it to the right */
-    margin-top: 10px; /* Spacing from the row above */
+    clear: both;
+    float: right;
+    margin-top: 10px;
   }
 
   /* Estilos para el menú del carrito */
   #shopping-cart-menu {
-    background-color: #2a2a2a; /* Color de fondo oscuro similar al header */
+    background-color: #2a2a2a;
     color: #fff;
     padding: 20px;
     margin: 20px auto;
@@ -278,7 +278,7 @@
   }
 
   #shopping-cart-menu ul li {
-    background-color: #3e3e3e; /* Un poco más claro que el fondo del menú */
+    background-color: #3e3e3e;
     margin-bottom: 10px;
     padding: 15px;
     border-radius: 5px;
@@ -313,7 +313,7 @@
   }
 
   #shopping-cart-menu .buy-button {
-    background-color: #4CAF50; /* Un color verde para el botón de compra */
+    background-color: #4CAF50;
     color: white;
     border: none;
     padding: 12px 25px;
@@ -357,8 +357,10 @@
 
   #sell-product-menu input[type="text"],
   #sell-product-menu textarea,
-  #sell-product-menu input[type="number"] {
-    width: calc(100% - 20px); /* Ajuste para padding */
+  #sell-product-menu input[type="number"],
+  #sell-product-menu input[type="date"],
+  #sell-product-menu select {
+    width: calc(100% - 20px);
     padding: 10px;
     border-radius: 5px;
     border: 1px solid #666;
@@ -368,7 +370,7 @@
   }
 
   #sell-product-menu textarea {
-    resize: vertical; /* Permite redimensionar verticalmente */
+    resize: vertical;
     min-height: 80px;
   }
 
@@ -381,7 +383,7 @@
     cursor: pointer;
     font-size: 1.2em;
     transition: background-color 0.3s ease;
-    display: block; /* Ocupa todo el ancho */
+    display: block;
     width: 100%;
     margin-top: 20px;
   }
@@ -394,19 +396,19 @@
   #product-detail-menu {
     background-color: #2a2a2a;
     color: #fff;
-    padding: 30px; /* Más padding para los detalles */
+    padding: 30px;
     margin: 20px auto;
-    width: 70%; /* Un poco más estrecho para centralizar detalles */
+    width: 70%;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    text-align: left; /* Alineación de texto a la izquierda para la descripción */
+    text-align: left;
   }
 
   #product-detail-menu h2 {
     text-align: center;
     color: #e8491d;
     margin-bottom: 25px;
-    font-size: 2.2em; /* Título más grande */
+    font-size: 2.2em;
   }
 
   #product-detail-menu .detail-image {
@@ -414,7 +416,7 @@
     height: auto;
     border-radius: 8px;
     margin-bottom: 20px;
-    display: block; /* Para centrar la imagen si es más pequeña */
+    display: block;
     margin-left: auto;
     margin-right: auto;
   }
@@ -423,14 +425,14 @@
     font-size: 1.1em;
     line-height: 1.6;
     margin-bottom: 15px;
-    color: #ccc; /* Un color más suave para el texto */
+    color: #ccc;
   }
 
   #product-detail-menu .detail-price {
     font-size: 1.8em;
     font-weight: bold;
     color: #e8491d;
-    text-align: right; /* Precio alineado a la derecha */
+    text-align: right;
     margin-top: 20px;
     margin-bottom: 20px;
   }
@@ -449,7 +451,7 @@
     cursor: pointer;
     font-size: 1.2em;
     transition: background-color 0.3s ease;
-    margin: 0 10px; /* Espacio entre botones */
+    margin: 0 10px;
   }
 
   #product-detail-menu .detail-actions button:hover {
@@ -489,11 +491,6 @@
     transition: background-color 0.3s ease, border-color 0.3s ease;
   }
 
-  .payment-options button:hover {
-    background-color: #555;
-    border-color: #e8491d;
-  }
-
   .payment-options button.active {
     background-color: #e8491d;
     border-color: #e8491d;
@@ -517,7 +514,7 @@
     height: auto;
     margin: 15px auto;
     display: block;
-    border: 5px solid #fff; /* Border to make it stand out */
+    border: 5px solid #fff;
   }
 
   .payment-details .form-group {
@@ -533,7 +530,10 @@
   }
 
   .payment-details .form-group input[type="text"],
-  .payment-details .form-group input[type="number"] {
+  .payment-details .form-group input[type="number"],
+  .payment-details .form-group input[type="date"],
+  .payment-details .form-group input[type="email"],
+  .payment-details .form-group input[type="password"] {
     width: calc(100% - 20px);
     padding: 10px;
     border-radius: 5px;
@@ -588,6 +588,124 @@
   .payment-action-buttons .back-button:hover {
     background-color: #555;
   }
+
+  /* Estilos para el menú de Login y Registro */
+  #login-menu, #register-menu, #user-profile-menu {
+    background-color: #2a2a2a;
+    color: #fff;
+    padding: 30px;
+    margin: 20px auto;
+    width: 60%;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+  }
+
+  #login-menu h2, #register-menu h2, #user-profile-menu h2 {
+    color: #e8491d;
+    margin-bottom: 30px;
+  }
+
+  #login-menu .form-group, #register-menu .form-group, #user-profile-menu .profile-info-group {
+    margin-bottom: 20px;
+    text-align: left;
+  }
+
+  #login-menu label, #register-menu label, #user-profile-menu label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #fff;
+  }
+
+  #login-menu input[type="email"], #login-menu input[type="password"],
+  #register-menu input[type="text"], #register-menu input[type="email"],
+  #register-menu input[type="password"], #register-menu input[type="date"],
+  #register-menu input[type="number"], #register-menu select {
+    width: calc(100% - 20px);
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #666;
+    background-color: #333;
+    color: white;
+    font-size: 1em;
+  }
+
+  #login-menu button, #register-menu button {
+    background-color: #e8491d;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.2em;
+    transition: background-color 0.3s ease;
+    display: block;
+    width: 100%;
+    margin-top: 20px;
+  }
+
+  #login-menu button:hover, #register-menu button:hover {
+    background-color: #c63d17;
+  }
+
+  /* Estilos específicos del menú de usuario */
+  #user-profile-menu .profile-detail p {
+    font-size: 1.1em;
+    margin-bottom: 10px;
+    color: #ccc;
+  }
+
+  #user-profile-menu .profile-detail strong {
+    color: #e8491d;
+  }
+
+  #user-profile-menu .section-title {
+    color: #e8491d;
+    margin-top: 40px;
+    margin-bottom: 20px;
+    font-size: 1.8em;
+    border-bottom: 1px solid #e8491d;
+    padding-bottom: 10px;
+  }
+
+  #user-profile-menu .product-list-item {
+    background-color: #3e3e3e;
+    margin-bottom: 10px;
+    padding: 15px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1em;
+  }
+
+  #user-profile-menu .product-list-item .item-details {
+    flex-grow: 1;
+    text-align: left;
+  }
+
+  #user-profile-menu .product-list-item .item-details strong {
+    color: #fff;
+  }
+
+  #user-profile-menu .logout-button {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.2em;
+    transition: background-color 0.3s ease;
+    margin-top: 30px;
+    width: auto;
+    display: inline-block;
+  }
+
+  #user-profile-menu .logout-button:hover {
+    background-color: #c82333;
+  }
 </style>
 
 <header>
@@ -602,7 +720,7 @@
     <!-- Navigation principal: Floats right and positions below the search bar if needed -->
     <nav>
       <ul>
-        <li [class.current]="currentActiveLink === 'Inicio'"><a href="index.html" title="Inicio" (click)="setActiveLink('Inicio')"><i class="fas fa-home"></i> Inicio</a></li>
+        <li [class.current]="currentActiveLink === 'Inicio'"><a href="#" title="Inicio" (click)="setActiveLink('Inicio')"><i class="fas fa-home"></i> Inicio</a></li>
         <li [class.current]="currentActiveLink === 'Productos'"><a href="#" title="Productos" (click)="setActiveLink('Productos')"><i class="fas fa-box"></i> Productos</a></li>
         <!-- Shopping Cart with click to show/hide the menu -->
         <li [class.current]="currentActiveLink === 'Carrito'"><a href="#" title="Carrito de Compras" (click)="toggleShoppingCartMenu()"><i class="fas fa-shopping-cart"></i> Carrito ({{ cartItems.length }})</a></li>
@@ -613,10 +731,14 @@
 
     <!-- User actions area: Floats right and positions below the main nav and search bar -->
     <div class="user-action-area">
-      <!-- Bottom row: Login / Register -->
-      <ul class="auth-links-list">
-        <li><a href="#" title="Iniciar Sesión"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</a></li>
-        <li><a href="#" title="Registrarse"><i class="fas fa-user-plus"></i> Registrarse</a></li>
+      <!-- Bottom row: Login / Register - Conditionally displayed -->
+      <ul class="auth-links-list" *ngIf="!loggedInUser">
+        <li><a href="#" title="Iniciar Sesión" (click)="setActiveLink('Iniciar Sesion')"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</a></li>
+        <li><a href="#" title="Registrarse" (click)="setActiveLink('Registrarse')"><i class="fas fa-user-plus"></i> Registrarse</a></li>
+      </ul>
+      <!-- Logout button - Displayed if user is logged in -->
+      <ul class="auth-links-list" *ngIf="loggedInUser">
+        <li><a href="#" title="Cerrar Sesión" (click)="logoutUser()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
       </ul>
     </div>
         <!-- Search bar: Floats right at the top -->
@@ -657,34 +779,34 @@
   </div>
 </section>
 
-<!-- Sell Product Menu - Visible only when currentActiveLink is 'Vender' -->
+<!-- Sell Product Menu - Visible only when currentActiveLink === 'Vender' -->
 <section id="sell-product-menu" class="container" *ngIf="currentActiveLink === 'Vender'">
   <h2>Subir un Nuevo Producto</h2>
-  <form>
+  <form #sellForm="ngForm">
     <div class="form-group">
       <label for="productName">Nombre del Producto:</label>
-      <input type="text" id="productName" name="productName" required>
+      <input type="text" id="productName" name="newProductName" [(ngModel)]="newProductName" required>
     </div>
     <div class="form-group">
       <label for="productDescription">Descripción:</label>
-      <textarea id="productDescription" name="productDescription" required></textarea>
+      <textarea id="productDescription" name="newProductDescription" [(ngModel)]="newProductDescription" required></textarea>
     </div>
     <div class="form-group">
       <label for="productPrice">Precio:</label>
-      <input type="number" id="productPrice" name="productPrice" min="0.01" step="0.01" required>
+      <input type="number" id="productPrice" name="newProductPrice" [(ngModel)]="newProductPrice" min="0.01" step="0.01" required>
     </div>
     <div class="form-group">
       <label for="productImage">Imagen del Producto (URL):</label>
-      <input type="text" id="productImage" name="productImage">
+      <input type="text" id="productImage" name="newProductImage" [(ngModel)]="newProductImage">
     </div>
-    <button type="submit" (click)="uploadProduct()">Subir Producto</button>
+    <button type="submit" (click)="uploadProduct()" [disabled]="!sellForm.valid">Subir Producto</button>
   </form>
 </section>
 
-<!-- Product Detail Menu - Visible only when currentActiveLink is 'ProductDetail' and a product is selected -->
+<!-- Product Detail Menu - Visible only when currentActiveLink === 'ProductDetail' and a product is selected -->
 <section id="product-detail-menu" class="container" *ngIf="currentActiveLink === 'ProductDetail' && selectedProduct">
   <h2>{{ selectedProduct.name }}</h2>
-  <img src="https://placehold.co/600x400/cccccc/333333?text={{ selectedProduct.name }}" alt="{{ selectedProduct.name }}" class="detail-image">
+  <img [src]="selectedProduct.image || 'https://placehold.co/600x400/cccccc/333333?text=' + selectedProduct.name" alt="{{ selectedProduct.name }}" class="detail-image">
   <p><strong>Descripción:</strong> {{ selectedProduct.description }}</p>
   <p class="detail-price">Precio: ${{ selectedProduct.price.toFixed(2) }}</p>
   <div class="detail-actions">
@@ -714,23 +836,23 @@
 
     <div *ngIf="paymentMethod === 'card'">
       <h3>Datos de la Tarjeta</h3>
-      <form>
+      <form #cardForm="ngForm">
         <div class="form-group">
           <label for="cardNumber">Número de Tarjeta:</label>
-          <input type="text" id="cardNumber" placeholder="XXXX XXXX XXXX XXXX" required>
+          <input type="text" id="cardNumber" name="cardNumber" [(ngModel)]="cardNumber" placeholder="XXXX XXXX XXXX XXXX" required>
         </div>
         <div class="form-group">
           <label for="cardName">Nombre en la Tarjeta:</label>
-          <input type="text" id="cardName" placeholder="Nombre completo" required>
+          <input type="text" id="cardName" name="cardName" [(ngModel)]="cardName" placeholder="Nombre completo" required>
         </div>
         <div class="form-group-inline">
           <div class="form-group">
             <label for="cardExpiry">Fecha de Vencimiento:</label>
-            <input type="text" id="cardExpiry" placeholder="MM/AA" required>
+            <input type="text" id="cardExpiry" name="cardExpiry" [(ngModel)]="cardExpiry" placeholder="MM/AA" pattern="^(0[1-9]|1[0-2])\/?([0-9]{2})$" required>
           </div>
           <div class="form-group">
             <label for="cardCVC">CVC:</label>
-            <input type="text" id="cardCVC" placeholder="XXX" required>
+            <input type="text" id="cardCVC" name="cardCVC" [(ngModel)]="cardCVC" placeholder="XXX" required>
           </div>
         </div>
         <p class="total-amount">Total a Pagar: ${{ getTotalCartAmount().toFixed(2) }}</p>
@@ -744,13 +866,197 @@
   </div>
 </section>
 
+<!-- Login Menu - Visible only when currentActiveLink === 'Iniciar Sesion' -->
+<section id="login-menu" class="container" *ngIf="currentActiveLink === 'Iniciar Sesion'">
+  <h2>Iniciar Sesión</h2>
+  <form #loginForm="ngForm" (ngSubmit)="loginUser()">
+    <div class="form-group">
+      <label for="loginEmail">Correo Electrónico:</label>
+      <input type="email" id="loginEmail" name="loginEmail" [(ngModel)]="loginEmail" required>
+    </div>
+    <div class="form-group">
+      <label for="loginPassword">Contraseña:</label>
+      <input type="password" id="loginPassword" name="loginPassword" [(ngModel)]="loginPassword" required>
+    </div>
+    <button type="submit" [disabled]="!loginForm.valid">Iniciar Sesión</button>
+  </form>
+</section>
+
+<!-- Register Menu - Visible only when currentActiveLink === 'Registrarse' -->
+<section id="register-menu" class="container" *ngIf="currentActiveLink === 'Registrarse'">
+  <h2>Registrarse</h2>
+  <form #registerForm="ngForm" (ngSubmit)="registerUser()">
+    <h3>Información Básica</h3>
+    <div class="form-group">
+      <label for="registerNombre">Nombre:</label>
+      <input type="text" id="registerNombre" name="registerNombre" [(ngModel)]="registerNombre" required>
+    </div>
+    <div class="form-group">
+      <label for="registerApellido">Apellido:</label>
+      <input type="text" id="registerApellido" name="registerApellido" [(ngModel)]="registerApellido" required>
+    </div>
+    <div class="form-group">
+      <label for="registerEmail">Correo Electrónico:</label>
+      <input type="email" id="registerEmail" name="registerEmail" [(ngModel)]="registerEmail" required>
+    </div>
+    <div class="form-group">
+      <label for="registerTelefono">Teléfono (Opcional):</label>
+      <input type="text" id="registerTelefono" name="registerTelefono" [(ngModel)]="registerTelefono">
+    </div>
+    <div class="form-group">
+      <label for="registerPassword">Contraseña:</label>
+      <input type="password" id="registerPassword" name="registerPassword" [(ngModel)]="registerPassword" required>
+    </div>
+    <div class="form-group">
+      <label for="registerConfirmPassword">Confirmar Contraseña:</label>
+      <input type="password" id="registerConfirmPassword" name="registerConfirmPassword" [(ngModel)]="registerConfirmPassword" required>
+    </div>
+
+    <h3>Tipo de Usuario</h3>
+    <div class="form-group">
+      <label for="registerUserType">Soy:</label>
+      <select id="registerUserType" name="registerUserType" [(ngModel)]="registerUserType">
+        <option value="Cliente">Cliente</option>
+        <option value="Empleado">Empleado</option>
+        <option value="Vendedor">Vendedor / Dueño de Tienda</option>
+      </select>
+    </div>
+
+    <!-- Campos condicionales para Cliente -->
+    <div *ngIf="registerUserType === 'Cliente'">
+      <h3>Datos de Cliente</h3>
+      <div class="form-group">
+        <label for="registerDireccion">Dirección:</label>
+        <input type="text" id="registerDireccion" name="registerDireccion" [(ngModel)]="registerDireccion" required>
+      </div>
+      <div class="form-group">
+        <label for="registerCiudad">Ciudad:</label>
+        <input type="text" id="registerCiudad" name="registerCiudad" [(ngModel)]="registerCiudad" required>
+      </div>
+      <div class="form-group">
+        <label for="registerCodigoPostal">Código Postal:</label>
+        <input type="text" id="registerCodigoPostal" name="registerCodigoPostal" [(ngModel)]="registerCodigoPostal" required>
+      </div>
+    </div>
+
+    <!-- Campos condicionales para Empleado -->
+    <div *ngIf="registerUserType === 'Empleado'">
+      <h3>Datos de Empleado</h3>
+      <div class="form-group">
+        <label for="registerFechaContratacion">Fecha de Contratación:</label>
+        <input type="date" id="registerFechaContratacion" name="registerFechaContratacion" [(ngModel)]="registerFechaContratacion" required>
+      </div>
+      <div class="form-group">
+        <label for="registerRolInterno">Rol Interno (Opcional):</label>
+        <input type="text" id="registerRolInterno" name="registerRolInterno" [(ngModel)]="registerRolInterno">
+      </div>
+      <div class="form-group">
+        <label for="registerSalario">Salario (Opcional):</label>
+        <input type="number" id="registerSalario" name="registerSalario" [(ngModel)]="registerSalario" min="0">
+      </div>
+    </div>
+
+    <!-- Campos condicionales para Vendedor -->
+    <div *ngIf="registerUserType === 'Vendedor'">
+      <h3>Datos de Tienda / Vendedor</h3>
+      <div class="form-group">
+        <label for="registerNombreTienda">Nombre de la Tienda:</label>
+        <input type="text" id="registerNombreTienda" name="registerNombreTienda" [(ngModel)]="registerNombreTienda" required>
+      </div>
+      <div class="form-group">
+        <label for="registerCuentaBanco">Cuenta de Banco (Opcional):</label>
+        <input type="text" id="registerCuentaBanco" name="registerCuentaBanco" [(ngModel)]="registerCuentaBanco">
+      </div>
+    </div>
+
+    <button type="submit" [disabled]="!registerForm.valid">Registrarse</button>
+  </form>
+</section>
+
+<!-- User Profile Menu - Visible only when currentActiveLink === 'Mi Cuenta' and loggedInUser exists -->
+<section id="user-profile-menu" class="container" *ngIf="currentActiveLink === 'Mi Cuenta' && loggedInUser as user">
+  <h2>Perfil de Usuario: {{ user.Nombre }} {{ user.Apellido }}</h2>
+
+  <div class="profile-detail">
+    <p><strong>ID de Usuario:</strong> {{ user.UsuarioID }}</p>
+    <p><strong>Email:</strong> {{ user.Email }}</p>
+    <p *ngIf="user.Telefono"><strong>Teléfono:</strong> {{ user.Telefono }}</p>
+    <p><strong>Tipo de Usuario:</strong> {{ user.userType }}</p>
+    <p><strong>Miembro desde:</strong> {{ user.FechaDeRegistro | date:'mediumDate' }}</p>
+    <p><strong>Estado:</strong> {{ user.Activo ? 'Activo' : 'Inactivo' }}</p>
+  </div>
+
+  <!-- Campos adicionales para Cliente -->
+  <div *ngIf="user.userType === 'Cliente'">
+    <h3 class="section-title">Datos de Cliente</h3>
+    <div class="profile-detail">
+      <p><strong>ID de Cliente:</strong> {{ user.ClienteID }}</p>
+      <p *ngIf="user.Direccion"><strong>Dirección:</strong> {{ user.Direccion }}</p>
+      <p *ngIf="user.Ciudad"><strong>Ciudad:</strong> {{ user.Ciudad }}</p>
+      <p *ngIf="user.CodigoPostal"><strong>Código Postal:</strong> {{ user.CodigoPostal }}</p>
+    </div>
+  </div>
+
+  <!-- Campos adicionales para Empleado -->
+  <div *ngIf="user.userType === 'Empleado'">
+    <h3 class="section-title">Datos de Empleado</h3>
+    <div class="profile-detail">
+      <p><strong>ID de Empleado:</strong> {{ user.EmpleadoID }}</p>
+      <p *ngIf="user.FechaDeContratacion"><strong>Fecha de Contratación:</strong> {{ user.FechaDeContratacion | date:'mediumDate' }}</p>
+      <p *ngIf="user.RolInterno"><strong>Rol Interno:</strong> {{ user.RolInterno }}</p>
+      <p *ngIf="user.Salario"><strong>Salario:</strong> ${{ user.Salario?.toFixed(2) }}</p>
+      <p *ngIf="user.FechaDeDespido"><strong>Fecha de Despido:</strong> {{ user.FechaDeDespido | date:'mediumDate' }}</p>
+    </div>
+  </div>
+
+  <!-- Campos adicionales para Vendedor -->
+  <div *ngIf="user.userType === 'Vendedor'">
+    <h3 class="section-title">Datos de Tienda / Vendedor</h3>
+    <div class="profile-detail">
+      <p><strong>ID de Vendedor:</strong> {{ user.VendedorID }}</p>
+      <p *ngIf="user.NombreDeTienda"><strong>Nombre de Tienda:</strong> {{ user.NombreDeTienda }}</p>
+      <p *ngIf="user.CuentaDeBanco"><strong>Cuenta de Banco:</strong> {{ user.CuentaDeBanco }}</p>
+    </div>
+  </div>
+
+  <!-- Productos que el usuario está vendiendo -->
+  <h3 class="section-title">Productos que estás vendiendo ({{ sellingProducts.length }})</h3>
+  <ul *ngIf="sellingProducts.length > 0; else noSellingProducts">
+    <li *ngFor="let product of sellingProducts" class="product-list-item">
+      <div class="item-details">
+        <strong>{{ product.name }}</strong> - ${{ product.price.toFixed(2) }}
+        <p>{{ product.description }}</p>
+      </div>
+    </li>
+  </ul>
+  <ng-template #noSellingProducts>
+    <p style="text-align: center; color: #ccc;">No estás vendiendo ningún producto actualmente.</p>
+  </ng-template>
+
+  <!-- Productos que el usuario ha comprado -->
+  <h3 class="section-title">Tus compras recientes ({{ purchasedProducts.length }})</h3>
+  <ul *ngIf="purchasedProducts.length > 0; else noPurchasedProducts">
+    <li *ngFor="let product of purchasedProducts" class="product-list-item">
+      <div class="item-details">
+        <strong>{{ product.name }}</strong> - ${{ product.price.toFixed(2) }}
+        <p>{{ product.description }}</p>
+      </div>
+    </li>
+  </ul>
+  <ng-template #noPurchasedProducts>
+    <p style="text-align: center; color: #ccc;">No has realizado ninguna compra.</p>
+  </ng-template>
+
+  <button class="logout-button" (click)="logoutUser()">Cerrar Sesión</button>
+</section>
+
 
 <!-- Product List - Visible only when currentActiveLink is 'Inicio' or 'Productos' -->
 <section id="product-list" *ngIf="currentActiveLink === 'Inicio' || currentActiveLink === 'Productos'">
   <!-- The *ngFor directive is now applied to the product-item div -->
   <div class="product-item" *ngFor="let product of products">
     <!-- Placeholder image. You can replace with actual product images later. -->
-    <img src="https://placehold.co/300x200/cccccc/333333?text=Producto" alt="{{ product.name }}">
+    <img [src]="product.image || 'https://placehold.co/300x200/cccccc/333333?text=Producto'" alt="{{ product.name }}">
     <h3>{{ product.name }}</h3>
     <p>{{ product.description }}</p>
     <p class="product-price">${{ product.price.toFixed(2) }}</p>
