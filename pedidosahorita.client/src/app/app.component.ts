@@ -441,9 +441,10 @@ export class AppComponent implements OnInit {
       return;
     }
 
-    // Usar el servicio de usuario para el login
-    this.usuarioService.loginUser(this.loginEmail, this.loginPassword).subscribe(
-      (response: any) => {
+this.http.post<any>('http://localhost:5257/api/UsuariosControlador/login', {
+    email: this.loginEmail,
+    contrasena: this.loginPassword
+  }).subscribe(      (response: any) => {
         if (response && response.usuario) {
           // El backend debe devolver un objeto con usuario, userType y datos extra según el rol
           this.loggedInUser = response.usuario as LoggedInUser;
@@ -514,8 +515,8 @@ export class AppComponent implements OnInit {
     }
 
     // Usar el servicio de usuario para el registro
-    this.usuarioService.registerCompleteUser(registroCompleto)
-      .subscribe(
+    this.http.post('http://localhost:5257/api/UsuariosControlador/registrar-completo', registroCompleto)
+    .subscribe(
         (response: any) => {
           this.registrationMessage = 'Registro exitoso. ¡Bienvenido!';
           this.resetRegistrationForm();
