@@ -1,105 +1,55 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { Factura } from '../models/factura.model';
+// src/app/services/factura.service.ts (Actualizado con más mock data)
 
-/**
- * @injectable
- * @description Servicio para gestionar las operaciones CRUD de Factura.
- * Simula interacciones con un backend.
- */
+import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { Factura } from '../models/factura.model'; // Usa la interfaz PascalCase
+
 @Injectable({
   providedIn: 'root'
 })
 export class FacturaService {
-  private apiUrl = 'api/facturas'; // URL de ejemplo, reemplazar con la URL real de tu API
-
-  // Datos simulados para demostración
   private facturas: Factura[] = [
-    {
-      FacturaID: 1,
-      FechaDeEmision: new Date('2025-06-20T10:00:00Z'),
-      MontoTotal: 1280.00,
-      TipoDeFactura: 'CLIENTE_COMPRA',
-      PedidoID: 1,
-      PagoID: 1
-    },
-    {
-      FacturaID: 2,
-      FechaDeEmision: new Date('2025-06-21T14:30:00Z'),
-      MontoTotal: 300.00,
-      TipoDeFactura: 'CLIENTE_COMPRA',
-      PedidoID: 3,
-      PagoID: 2
-    }
+    { FacturaID: 1, FechaDeEmision: new Date('2024-05-20T10:10:00'), MontoTotal: 1380.00, TipoDeFactura: 'CLIENTE_COMPRA', PedidoID: 1, PagoID: 1, URLFacturaPDF: 'https://example.com/factura/1.pdf' },
+    { FacturaID: 2, FechaDeEmision: new Date('2024-06-01T14:40:00'), MontoTotal: 270.00, TipoDeFactura: 'CLIENTE_COMPRA', PedidoID: 2, PagoID: 2, URLFacturaPDF: 'https://example.com/factura/2.pdf' },
+    { FacturaID: 3, FechaDeEmision: new Date('2024-06-10T09:25:00'), MontoTotal: 135.00, TipoDeFactura: 'CLIENTE_COMPRA', PedidoID: 3, PagoID: 3, URLFacturaPDF: '' }, // Sin PDF
+    { FacturaID: 4, FechaDeEmision: new Date('2024-06-23T11:10:00'), MontoTotal: 62.00, TipoDeFactura: 'CLIENTE_COMPRA', PedidoID: 4, PagoID: 4, URLFacturaPDF: 'https://example.com/factura/4.pdf' }
   ];
 
-  /**
-   * @constructor
-   * @param {HttpClient} http - Inyecta el servicio HttpClient.
-   */
-  constructor(private http: HttpClient) { }
+  constructor() { }
 
-  /**
-   * @method getFacturas
-   * @description Obtiene todas las facturas.
-   * @returns {Observable<Factura[]>} Un Observable que emite un array de Factura.
-   */
   getFacturas(): Observable<Factura[]> {
-    // En un entorno real: return this.http.get<Factura[]>(this.apiUrl);
     return of(this.facturas);
   }
 
-  /**
-   * @method getFacturaById
-   * @description Obtiene una factura por su ID.
-   * @param {number} id - El ID de la factura a obtener.
-   * @returns {Observable<Factura | undefined>} Un Observable que emite la Factura encontrada o undefined.
-   */
   getFacturaById(id: number): Observable<Factura | undefined> {
-    // En un entorno real: return this.http.get<Factura>(`${this.apiUrl}/${id}`);
-    return of(this.facturas.find(f => f.FacturaID === id));
+    const factura = this.facturas.find(f => f.FacturaID === id);
+    return of(factura);
   }
 
-  /**
-   * @method addFactura
-   * @description Agrega una nueva factura.
-   * @param {Factura} factura - La factura a agregar.
-   * @returns {Observable<Factura>} Un Observable que emite la factura agregada (con su ID asignado).
-   */
+  getFacturaByPedidoId(pedidoId: number): Observable<Factura | undefined> {
+    const factura = this.facturas.find(f => f.PedidoID === pedidoId);
+    return of(factura);
+  }
+
   addFactura(factura: Factura): Observable<Factura> {
-    // En un entorno real: return this.http.post<Factura>(this.apiUrl, factura);
     const newId = this.facturas.length > 0 ? Math.max(...this.facturas.map(f => f.FacturaID)) + 1 : 1;
-    const newFactura = { ...factura, FacturaID: newId };
+    const newFactura: Factura = { ...factura, FacturaID: newId, FechaDeEmision: new Date() };
     this.facturas.push(newFactura);
     return of(newFactura);
   }
 
-  /**
-   * @method updateFactura
-   * @description Actualiza una factura existente.
-   * @param {Factura} factura - La factura a actualizar. Debe contener el FacturaID.
-   * @returns {Observable<any>} Un Observable que emite una respuesta vacía o un indicador de éxito.
-   */
-  updateFactura(factura: Factura): Observable<any> {
-    // En un entorno real: return this.http.put(`${this.apiUrl}/${factura.FacturaID}`, factura);
+  updateFactura(factura: Factura): Observable<Factura | null> {
     const index = this.facturas.findIndex(f => f.FacturaID === factura.FacturaID);
-    if (index > -1) {
-      this.facturas[index] = factura;
-      return of(factura);
+    if (index !== -1) {
+      this.facturas[index] = { ...this.facturas[index], ...factura };
+      return of(this.facturas[index]);
     }
     return of(null);
   }
 
-  /**
-   * @method deleteFactura
-   * @description Elimina una factura por su ID.
-   * @param {number} id - El ID de la factura a eliminar.
-   * @returns {Observable<any>} Un Observable que emite una respuesta vacía o un indicador de éxito.
-   */
-  deleteFactura(id: number): Observable<any> {
-    // En un entorno real: return this.http.delete(`${this.apiUrl}/${id}`);
+  deleteFactura(id: number): Observable<boolean> {
+    const initialLength = this.facturas.length;
     this.facturas = this.facturas.filter(f => f.FacturaID !== id);
-    return of(null);
+    return of(this.facturas.length < initialLength);
   }
 }
