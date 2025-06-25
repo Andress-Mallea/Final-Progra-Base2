@@ -16,20 +16,6 @@ export class EmpleadoService {
 
   // Datos simulados para demostración
   private empleados: Empleado[] = [
-    {
-      UsuarioID: 2,
-      Nombre: 'Carlos',
-      Apellido: 'Ruiz',
-      Email: 'carlos.ruiz@example.com',
-      Telefono: '444-555-6666',
-      ContrasenaHash: 'hashedpass2',
-      FechaDeRegistro: new Date('2024-02-15T11:30:00Z'),
-      Activo: true,
-      EmpleadoID: 101,
-      FechaDeContratacion: new Date('2023-01-20'),
-      RolInterno: 'Repartidor',
-      Salario: 1500.00
-    }
   ];
 
   /**

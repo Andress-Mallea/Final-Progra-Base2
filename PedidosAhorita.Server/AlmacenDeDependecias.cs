@@ -28,7 +28,7 @@ namespace PedidosAhorita.Server
          public static void Initialize(IConfiguration configuration)
         {
             // Inicializar SQL Server
-            string sqlConnectionString = "Server=LAPTOP-QKJ8CHC7;Database=Pedidos-Ahorita;Integrated Security=True;TrustServerCertificate=True";
+            string sqlConnectionString = "Server=MSI\\MSSQLSERVER01;Database=Pedidos-Ahorita;Integrated Security=True;TrustServerCertificate=True";
             SQL = new SQLConeccion(sqlConnectionString);
             CategoriaProductoTabla = new EjecucionConeccion<CategoriaProducto>(SQL, "CategoriaProductos","CategoriaID");
             ClienteTabla = new EjecucionConeccion<Cliente>(SQL, "Clientes", "UsuarioID");

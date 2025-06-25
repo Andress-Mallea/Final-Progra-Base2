@@ -12,5 +12,6 @@ namespace PedidosAhorita.Server.Tablas
         public string ContrasenaHash { get; set; } = string.Empty; // NVARCHAR(255) NOT NULL en DB
         public DateTime FechaDeRegistro { get; set; } // DATETIME DEFAULT GETDATE() en DB
         public bool Activo { get; set; } // BIT DEFAULT 1 en DB
+        public string TipoDeusuario { get; set; } = string.Empty; // VARCHAR(20) NOT NULL en DB
     }
 }

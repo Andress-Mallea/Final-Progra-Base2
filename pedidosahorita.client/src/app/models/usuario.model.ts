@@ -7,5 +7,6 @@ export interface Usuario {
   Telefono?: string;        // Número de teléfono (opcional)
   ContrasenaHash: string;   // Hash de la contraseña (nunca se maneja la contraseña en texto plano en el frontend)
   FechaDeRegistro: Date;    // Fecha de registro (DEFAULT GETDATE() en DB)
+  TipoDeusuario: string
   Activo: boolean;          // Indica si el usuario está activo (DEFAULT 1 en DB)
 }
