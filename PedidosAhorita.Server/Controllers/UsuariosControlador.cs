@@ -81,7 +81,8 @@ namespace PedidosAhorita.Server.Controllers
                     Email = dto.Email,
                     ContrasenaHash = dto.Contrasena,
                     FechaDeRegistro = DateTime.Now,
-                    Activo = true
+                    Activo = true,
+                    TipoDeusuario = dto.Tipo // Asignar el tipo de usuario
                 };
                 int usuarioId = AlmacenDeDependecias.UsuariosTabla.AddID(usuario);
 
@@ -164,16 +165,25 @@ namespace PedidosAhorita.Server.Controllers
                 }
 
                 // 5. Armar respuesta
-                var usuarioCompleto = new
+                var usuarioCompleto = new Dictionary<string, object>
                 {
-                    UsuarioID = usuario.UsuarioID,
-                    Nombre = usuario.Nombre,
-                    Apellido = usuario.Apellido,
-                    Email = usuario.Email,
-                    userType = userType,
-                    // Incluye los datos extra según el tipo
-                    datosExtra
+                    { "UsuarioID", usuario.UsuarioID },
+                    { "Nombre", usuario.Nombre },
+                    { "Apellido", usuario.Apellido },
+                    { "Email", usuario.Email },
+                    { "userType", usuario.TipoDeusuario },
+                    { "Activo", usuario.Activo },
+                    { "FechaDeRegistro", usuario.FechaDeRegistro }
                 };
+
+                // Si hay datos extra, agrégalos al diccionario
+                if (datosExtra != null)
+                {
+                    foreach (var prop in datosExtra.GetType().GetProperties())
+                    {
+                        usuarioCompleto[prop.Name] = prop.GetValue(datosExtra);
+                    }
+                }
 
                 return Ok(new { usuario = usuarioCompleto });
             }

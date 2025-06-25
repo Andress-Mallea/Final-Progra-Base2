@@ -494,7 +494,8 @@ export class AppComponent implements OnInit {
     nombre: this.registerNombre,
     apellido: this.registerApellido,
     email: this.registerEmail,
-    contrasena: this.registerPassword
+    contrasena: this.registerPassword,
+    tipodeusuario: this.registerUserType, // 'Cliente', 'Empleado' o 'Vendedor'
   };
 
     // First, register the basic user information
