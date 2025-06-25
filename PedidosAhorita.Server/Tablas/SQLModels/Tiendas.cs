@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace PedidosAhorita.Server.Tablas
 {
-    public class Tiendas: Usuarios
+    public class Tiendas
     {
         public int VendedorID { get; set; } // Clave Primaria (PK) y FK a Usuarios
         public string NombreDeTienda { get; set; } = string.Empty; // NVARCHAR(100) NOT NULL en DB

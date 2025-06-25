@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms'; // Importa FormsModule para ngMode
 import { HttpClientModule } from '@angular/common/http'; // Mantenerlo por si se usa en el futuro, aunque los servicios son mock
 import { forkJoin, Observable } from 'rxjs'; // Import forkJoin and Observable
 import { map } from 'rxjs/operators'; // Import map
+import { HttpClient } from '@angular/common/http'; // Import HttpClient
 
 // Importa las interfaces de los modelos
 import { Producto } from './models/producto.model';
@@ -136,7 +137,6 @@ export class AppComponent implements OnInit {
   showProductsMenu: boolean = false;
   registrationMessage: string = '';
 
-
   constructor(
     private productoService: ProductoService,
     private usuarioService: UsuarioService,
@@ -151,8 +151,10 @@ export class AppComponent implements OnInit {
     private facturaService: FacturaService,
     private pagoService: PagoService,
     private pagosDetallePedidoService: PagosDetallePedidoService,
-    private pedidoService: PedidoService
+    private pedidoService: PedidoService,
+    private http: HttpClient // <-- Add this line to inject HttpClient
   ) { }
+
 
   ngOnInit(): void {
     this.loadProducts(); // Carga todos los productos
@@ -434,110 +436,48 @@ export class AppComponent implements OnInit {
   }
 
   loginUser(): void {
-    if (!this.loginEmail || !this.loginPassword) {
-      alert('Por favor, ingresa tu correo y contraseña.');
-      return;
-    }
-
-    this.usuarioService.getUsuarios().subscribe(
-      (usuarios: Usuario[]) => {
-        const foundUser = usuarios.find(u => u.Email === this.loginEmail && u.ContrasenaHash === this.loginPassword);
-        if (foundUser) {
-          // Obtener todos los roles asociados al usuario
-          this.usuarioRolService.getUsuariosRoles().subscribe(
-            (userRoles: UsuarioRol[]) => {
-              const rolesObservables: Observable<RolDeUsuario | undefined>[] = userRoles
-                .filter(ur => ur.UsuarioID === foundUser.UsuarioID)
-                .map(ur => this.rolDeUsuarioService.getRolDeUsuarioById(ur.RolID));
-
-              // Usar forkJoin para esperar que todos los observables de roles se resuelvan
-              forkJoin(rolesObservables.filter(Boolean) as Observable<RolDeUsuario>[]).subscribe(
-                (resolvedRoles: RolDeUsuario[]) => {
-                  let primaryRole: RolDeUsuario | undefined;
-
-                  // Prioridad: Vendedor > Cliente (ejemplo simple)
-                  if (resolvedRoles.some(r => r.NombreRol === 'Vendedor')) {
-                    primaryRole = resolvedRoles.find(r => r.NombreRol === 'Vendedor');
-                  } else if (resolvedRoles.some(r => r.NombreRol === 'Cliente')) {
-                    primaryRole = resolvedRoles.find(r => r.NombreRol === 'Cliente');
-                  }
-                  // Puedes añadir más lógica de prioridad si hay otros roles como Empleado, Administrador, Repartidor
-
-                  if (primaryRole) {
-                    this.loggedInUser = { ...foundUser, userType: primaryRole.NombreRol as UserRole };
-
-                    // Cargar datos específicos según el tipo de usuario y combinarlos con loggedInUser
-                    if (primaryRole.NombreRol === 'Cliente') {
-                      this.clienteService.getClienteById(foundUser.UsuarioID).subscribe(
-                        (cliente: Cliente | undefined) => {
-                          if (cliente) {
-                            this.loggedInUser = { ...this.loggedInUser!, ...cliente } as LoggedInUser;
-                            // Cargar historial de pedidos para el cliente logueado
-                            this.loadCustomerOrders(this.loggedInUser!.UsuarioID);
-                          }
-                        }
-                      );
-                    } else if (primaryRole.NombreRol === 'Empleado') {
-                      this.empleadoService.getEmpleadoById(foundUser.UsuarioID).subscribe(
-                        (empleado: Empleado | undefined) => {
-                          if (empleado) {
-                            this.loggedInUser = { ...this.loggedInUser!, ...empleado } as LoggedInUser;
-                          }
-                        }
-                      );
-                    } else if (primaryRole.NombreRol === 'Vendedor') {
-                      this.tiendaService.getTiendaById(foundUser.UsuarioID).subscribe(
-                        (tienda: Tienda | undefined) => {
-                          if (tienda) {
-                            this.loggedInUser = { ...this.loggedInUser!, ...tienda } as LoggedInUser;
-                            this.productoService.getProductos().subscribe(allProducts => {
-                              this.sellingProducts = allProducts.filter(p => p.VendedorID === tienda.VendedorID);
-                            });
-                          }
-                        }
-                      );
-                    }
-
-                    // Productos comprados (esto podría ser parte de los pedidos en el historial)
-                    if (this.loggedInUser!.userType === 'Cliente') {
-                      this.purchasedProducts = [
-                        { id: 9, name: 'Smartwatch', description: 'Reloj inteligente con GPS.', price: 200.00, VendedorID: 0, StockDisponible: 0, Activo: true, FechaCreacion: new Date() },
-                        { id: 10, name: 'Batería Externa', description: 'Carga tus dispositivos en movimiento.', price: 30.00, VendedorID: 0, StockDisponible: 0, Activo: true, FechaCreacion: new Date() }
-                      ];
-                    }
-
-                    alert('¡Inicio de sesión simulado exitoso como ' + this.loggedInUser!.Email + ' con rol: ' + this.loggedInUser!.userType + '!');
-                    this.loginEmail = '';
-                    this.loginPassword = '';
-                    this.setActiveLink('Mi Cuenta');
-                  } else {
-                    alert('Usuario encontrado pero sin rol principal asignado.');
-                    this.loggedInUser = null;
-                  }
-                },
-                (error: any) => {
-                  console.error('Error al resolver los roles del usuario:', error);
-                  alert('Error al cargar roles de usuario.');
-                }
-              );
-            },
-            (error: any) => {
-              console.error('Error al cargar roles de usuario:', error);
-              alert('Error al cargar roles de usuario.');
-            }
-          );
-
-        } else {
-          alert('Correo o contraseña incorrectos.');
-          this.loggedInUser = null;
-        }
-      },
-      (error: any) => {
-        console.error('Error al obtener usuarios:', error);
-        alert('Error al intentar iniciar sesión.');
-      }
-    );
+  if (!this.loginEmail || !this.loginPassword) {
+    alert('Por favor, ingresa tu correo y contraseña.');
+    return;
   }
+
+  // Llama al backend con email y contraseña
+  this.http.post<any>('http://localhost:5257/api/UsuariosControlador/login', {
+    email: this.loginEmail,
+    contrasena: this.loginPassword
+  }).subscribe(
+    (response: any) => {
+      if (response && response.usuario) {
+        // El backend debe devolver un objeto con usuario, userType y datos extra según el rol
+        this.loggedInUser = response.usuario as LoggedInUser;
+
+        // Si es cliente, carga historial de pedidos
+        if (this.loggedInUser.userType === 'Cliente') {
+          this.loadCustomerOrders(this.loggedInUser.UsuarioID);
+        }
+        // Si es vendedor, carga productos en venta
+        if (this.loggedInUser.userType === 'Vendedor') {
+          this.productoService.getProductos().subscribe(allProducts => {
+            this.sellingProducts = allProducts.filter(p => p.VendedorID === this.loggedInUser!.VendedorID);
+          });
+        }
+
+        alert('¡Inicio de sesión exitoso como ' + this.loggedInUser.Email + ' con rol: ' + this.loggedInUser.userType + '!');
+        this.loginEmail = '';
+        this.loginPassword = '';
+        this.setActiveLink('Mi Cuenta');
+      } else {
+        console.error('Login fallido: usuario no encontrado o datos incorrectos');
+        alert('Correo o contraseña incorrectos.');
+        this.loggedInUser = null;
+      }
+    },
+    (error: any) => {
+      console.error('Error en el login:', error);
+      alert('Error al intentar iniciar sesión.');
+    }
+  );
+}
 
 
   registerUser(): void {
@@ -549,122 +489,60 @@ export class AppComponent implements OnInit {
     }
 
     // Prepare the basic Usuario object
-    const newUsuario: Usuario = {
-      UsuarioID: 0, // Placeholder, will be set by backend
-      Nombre: this.registerNombre + ' ' + this.registerApellido, // Combine first and last name for Nombre
-      Apellido: this.registerApellido, // Add Apellido property
-      Email: this.registerEmail,
-      ContrasenaHash: this.registerPassword, // **IMPORTANT**: In a real app, send plain password to backend for hashing
-      FechaDeRegistro: new Date(), // Placeholder, will be set by backend
-      Activo: true // Default to true
-    };
+    const registroCompleto: any = {
+    tipo: this.registerUserType, // 'Cliente', 'Empleado' o 'Vendedor'
+    nombre: this.registerNombre,
+    apellido: this.registerApellido,
+    email: this.registerEmail,
+    contrasena: this.registerPassword
+  };
 
     // First, register the basic user information
-    this.usuarioService.registerUser(newUsuario).subscribe(
-      (registeredUser: Usuario) => {
-        console.log('Usuario básico registrado con éxito:', registeredUser);
+    if (this.registerUserType === 'Cliente') {
+    registroCompleto.direccion = this.registerDireccion;
+    registroCompleto.ciudad = this.registerCiudad;
+    registroCompleto.codigoPostal = this.registerCodigoPostal;
+  } else if (this.registerUserType === 'Empleado') {
+    registroCompleto.fechaDeContratacion = this.registerFechaContratacion;
+    registroCompleto.rolInterno = this.registerRolInterno;
+    registroCompleto.salario = this.registerSalario;
+  } else if (this.registerUserType === 'Vendedor') {
+    registroCompleto.nombreDeTienda = this.registerNombreTienda;
+    registroCompleto.cuentaDeBanco = this.registerCuentaBanco;
+  }
+  this.http.post('http://localhost:5257/api/UsuariosControlador/registrar-completo', registroCompleto)
+    .subscribe(
+      (response: any) => {
         this.registrationMessage = 'Registro exitoso. ¡Bienvenido!';
-
-        // Now handle the specific user type data
-        let typeSpecificObservable: Observable<any> | null = null;
-
-        if (this.registerUserType === 'Cliente') {
-          const newCliente: Cliente = {
-            ClienteID: registeredUser.UsuarioID, // Use the ID from the newly registered user
-            UsuarioID: registeredUser.UsuarioID,
-            Nombre: this.registerNombre,
-            Apellido: this.registerApellido,
-            Email: this.registerEmail,
-            Telefono: this.registerTelefono,
-            Direccion: this.registerDireccion,
-            Ciudad: this.registerCiudad,
-            CodigoPostal: this.registerCodigoPostal,
-            FechaDeRegistro: registeredUser.FechaDeRegistro, // Use the date from the registered user
-            ContrasenaHash: registeredUser.ContrasenaHash,
-            Activo: registeredUser.Activo
-          };
-          typeSpecificObservable = this.clienteService.addCliente(newCliente);
-        } else if (this.registerUserType === 'Empleado') {
-          const newEmpleado: Empleado = {
-            EmpleadoID: registeredUser.UsuarioID, // Use the ID from the newly registered user
-            UsuarioID: registeredUser.UsuarioID,
-            Nombre: this.registerNombre,
-            Apellido: this.registerApellido,
-            Email: this.registerEmail,
-            Telefono: this.registerTelefono,
-            FechaDeContratacion: new Date(this.registerFechaContratacion), // Convert to Date object
-            RolInterno: this.registerRolInterno,
-            Salario: this.registerSalario || 0, // Default to 0 if null
-            ContrasenaHash: registeredUser.ContrasenaHash,
-            FechaDeRegistro: registeredUser.FechaDeRegistro,
-            Activo: registeredUser.Activo
-          };
-          typeSpecificObservable = this.empleadoService.addEmpleado(newEmpleado);
-        } else if (this.registerUserType === 'Vendedor') {
-          // A Vendedor often implies a Tienda (store) and might also be an Empleado or have a specific role.
-          // For simplicity, let's assume 'Vendedor' means creating a Tienda entry.
-          const newTienda: Tienda = {
-            VendedorID: registeredUser.UsuarioID, // Use the ID from the newly registered user
-            UsuarioID: registeredUser.UsuarioID,
-            Nombre: this.registerNombre,
-            Apellido: this.registerApellido,
-            Email: this.registerEmail,
-            ContrasenaHash: registeredUser.ContrasenaHash,
-            NombreDeTienda: this.registerNombreTienda,
-            CuentaDeBanco: this.registerCuentaBanco,
-            Activo: true,
-            FechaDeRegistro: registeredUser.FechaDeRegistro // Use the date from the registered user
-          };
-          typeSpecificObservable = this.tiendaService.addTienda(newTienda);
-        }
-
-        if (typeSpecificObservable) {
-          typeSpecificObservable.subscribe(
-            (typeSpecificResponse: any) => {
-              console.log(`${this.registerUserType} data saved successfully:`, typeSpecificResponse);
-              this.registrationMessage += ` Datos de ${this.registerUserType} guardados.`;
-              this.resetRegistrationForm();
-              this.loggedInUser = { ...registeredUser, userType: this.registerUserType }; // Log in the user after successful registration
-              this.setActiveLink('Inicio'); // Redirect to home or profile
-            },
-            (typeSpecificError: any) => {
-              console.error(`Error saving ${this.registerUserType} data:`, typeSpecificError);
-              this.registrationMessage = `Registro exitoso de usuario, pero hubo un error al guardar los datos de ${this.registerUserType}.`;
-            }
-          );
-        } else {
-          this.resetRegistrationForm();
-          this.loggedInUser = { ...registeredUser, userType: this.registerUserType }; // Log in the user even if no specific data, with userType
-          this.setActiveLink('Inicio'); // Redirect to home or profile
-        }
-
+        this.resetRegistrationForm();
+        // Puedes guardar el usuario logueado aquí si el backend lo retorna
+        this.setActiveLink('Inicio');
       },
       (error: any) => {
-        console.error('Error al registrar usuario básico:', error);
+        console.error('Error en el registro:', error);
         this.registrationMessage = `Error en el registro: ${error.message || 'Error desconocido'}`;
       }
     );
-  }
+}
 
-  // Helper to reset the registration form
-  resetRegistrationForm(): void {
-    this.registerNombre = '';
-    this.registerApellido = '';
-    this.registerEmail = '';
-    this.registerTelefono = '';
-    this.registerPassword = '';
-    this.registerConfirmPassword = '';
-    this.registerUserType = 'Cliente';
-    this.registerDireccion = '';
-    this.registerCiudad = '';
-    this.registerCodigoPostal = '';
-    this.registerFechaContratacion = '';
-    this.registerRolInterno = '';
-    this.registerSalario = null;
-    this.registerNombreTienda = '';
-    this.registerCuentaBanco = '';
-  }
-
+// Helper to reset the registration form
+resetRegistrationForm(): void {
+  this.registerNombre = '';
+  this.registerApellido = '';
+  this.registerEmail = '';
+  this.registerTelefono = '';
+  this.registerPassword = '';
+  this.registerConfirmPassword = '';
+  this.registerUserType = 'Cliente';
+  this.registerDireccion = '';
+  this.registerCiudad = '';
+  this.registerCodigoPostal = '';
+  this.registerFechaContratacion = '';
+  this.registerRolInterno = '';
+  this.registerSalario = null;
+  this.registerNombreTienda = '';
+  this.registerCuentaBanco = '';
+}
 
   // Nuevo método para que un cliente convierta su cuenta a vendedor
   convertAccountToSeller(): void {
