@@ -1,4 +1,5 @@
 export interface Usuario {
+
   UsuarioID: number;        // Clave Primaria (PK)
   Nombre: string;           // Nombre del usuario
   Apellido: string;         // Apellido del usuario

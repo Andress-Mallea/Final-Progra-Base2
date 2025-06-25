@@ -12,7 +12,7 @@ import { Tienda } from '../models/tienda.model';
   providedIn: 'root'
 })
 export class TiendaService {
-  private apiUrl = 'api/tiendas'; // URL de ejemplo para la API de tiendas
+  private apiUrl = 'http://localhost:5257/api/TiendasControladores'; // URL de ejemplo para la API de tiendas
 
   // Datos simulados para demostración
   private tiendas: Tienda[] = [

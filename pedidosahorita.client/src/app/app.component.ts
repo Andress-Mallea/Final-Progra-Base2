@@ -134,6 +134,7 @@ export class AppComponent implements OnInit {
 
   // Nueva propiedad para controlar la visibilidad del menú de productos
   showProductsMenu: boolean = false;
+  registrationMessage: string = '';
 
 
   constructor(
@@ -540,131 +541,130 @@ export class AppComponent implements OnInit {
 
 
   registerUser(): void {
-    if (!this.registerNombre || !this.registerApellido || !this.registerEmail || !this.registerPassword || !this.registerConfirmPassword) {
-      alert('Por favor, rellena los campos de Nombre, Apellido, Email y Contraseña.');
-      return;
-    }
+    this.registrationMessage = ''; // Clear previous messages
+
     if (this.registerPassword !== this.registerConfirmPassword) {
-      alert('Las contraseñas no coinciden.');
+      this.registrationMessage = 'Las contraseñas no coinciden.';
       return;
     }
 
-    const newUser: Usuario = {
-      UsuarioID: 0,
-      Nombre: this.registerNombre,
-      Apellido: this.registerApellido,
+    // Prepare the basic Usuario object
+    const newUsuario: Usuario = {
+      UsuarioID: 0, // Placeholder, will be set by backend
+      Nombre: this.registerNombre + ' ' + this.registerApellido, // Combine first and last name for Nombre
+      Apellido: this.registerApellido, // Add Apellido property
       Email: this.registerEmail,
-      Telefono: this.registerTelefono,
-      ContrasenaHash: this.registerPassword,
-      FechaDeRegistro: new Date(),
-      Activo: true
+      ContrasenaHash: this.registerPassword, // **IMPORTANT**: In a real app, send plain password to backend for hashing
+      FechaDeRegistro: new Date(), // Placeholder, will be set by backend
+      Activo: true // Default to true
     };
 
-    this.usuarioService.addUsuario(newUser).subscribe(
-      (addedUser: Usuario) => {
-        console.log('Usuario base registrado:', addedUser);
+    // First, register the basic user information
+    this.usuarioService.registerUser(newUsuario).subscribe(
+      (registeredUser: Usuario) => {
+        console.log('Usuario básico registrado con éxito:', registeredUser);
+        this.registrationMessage = 'Registro exitoso. ¡Bienvenido!';
 
-        this.rolDeUsuarioService.getRolesDeUsuario().subscribe(
-          (roles: RolDeUsuario[]) => {
-            const selectedRole = roles.find(r => r.NombreRol === this.registerUserType);
-            if (selectedRole) {
-              const newUserRol: UsuarioRol = {
-                UsuarioID: addedUser.UsuarioID,
-                RolID: selectedRole.RolID
-              };
-              this.usuarioRolService.addUsuarioRol(newUserRol).subscribe(
-                (addedUserRol: UsuarioRol) => {
-                  console.log('Rol de usuario asignado:', addedUserRol);
+        // Now handle the specific user type data
+        let typeSpecificObservable: Observable<any> | null = null;
 
-                  let specificUserData: Partial<Cliente> | Partial<Empleado> | Partial<Tienda> | null = null;
+        if (this.registerUserType === 'Cliente') {
+          const newCliente: Cliente = {
+            ClienteID: registeredUser.UsuarioID, // Use the ID from the newly registered user
+            UsuarioID: registeredUser.UsuarioID,
+            Nombre: this.registerNombre,
+            Apellido: this.registerApellido,
+            Email: this.registerEmail,
+            Telefono: this.registerTelefono,
+            Direccion: this.registerDireccion,
+            Ciudad: this.registerCiudad,
+            CodigoPostal: this.registerCodigoPostal,
+            FechaDeRegistro: registeredUser.FechaDeRegistro, // Use the date from the registered user
+            ContrasenaHash: registeredUser.ContrasenaHash,
+            Activo: registeredUser.Activo
+          };
+          typeSpecificObservable = this.clienteService.addCliente(newCliente);
+        } else if (this.registerUserType === 'Empleado') {
+          const newEmpleado: Empleado = {
+            EmpleadoID: registeredUser.UsuarioID, // Use the ID from the newly registered user
+            UsuarioID: registeredUser.UsuarioID,
+            Nombre: this.registerNombre,
+            Apellido: this.registerApellido,
+            Email: this.registerEmail,
+            Telefono: this.registerTelefono,
+            FechaDeContratacion: new Date(this.registerFechaContratacion), // Convert to Date object
+            RolInterno: this.registerRolInterno,
+            Salario: this.registerSalario || 0, // Default to 0 if null
+            ContrasenaHash: registeredUser.ContrasenaHash,
+            FechaDeRegistro: registeredUser.FechaDeRegistro,
+            Activo: registeredUser.Activo
+          };
+          typeSpecificObservable = this.empleadoService.addEmpleado(newEmpleado);
+        } else if (this.registerUserType === 'Vendedor') {
+          // A Vendedor often implies a Tienda (store) and might also be an Empleado or have a specific role.
+          // For simplicity, let's assume 'Vendedor' means creating a Tienda entry.
+          const newTienda: Tienda = {
+            VendedorID: registeredUser.UsuarioID, // Use the ID from the newly registered user
+            UsuarioID: registeredUser.UsuarioID,
+            Nombre: this.registerNombre,
+            Apellido: this.registerApellido,
+            Email: this.registerEmail,
+            ContrasenaHash: registeredUser.ContrasenaHash,
+            NombreDeTienda: this.registerNombreTienda,
+            CuentaDeBanco: this.registerCuentaBanco,
+            Activo: true,
+            FechaDeRegistro: registeredUser.FechaDeRegistro // Use the date from the registered user
+          };
+          typeSpecificObservable = this.tiendaService.addTienda(newTienda);
+        }
 
-                  if (this.registerUserType === 'Cliente') {
-                    if (!this.registerDireccion || !this.registerCiudad || !this.registerCodigoPostal) {
-                      alert('Por favor, rellena los datos de dirección para el cliente.');
-                      return;
-                    }
-                    specificUserData = {
-                      ClienteID: addedUser.UsuarioID,
-                      Direccion: this.registerDireccion,
-                      Ciudad: this.registerCiudad,
-                      CodigoPostal: this.registerCodigoPostal
-                    };
-                    this.clienteService.addCliente({ ...addedUser, ...specificUserData as Cliente }).subscribe();
-                  } else if (this.registerUserType === 'Empleado') {
-                    if (!this.registerFechaContratacion || this.registerSalario === null || this.registerSalario <= 0) {
-                      alert('Por favor, rellena los datos de contratación y salario para el empleado.');
-                      return;
-                    }
-                    specificUserData = {
-                      EmpleadoID: addedUser.UsuarioID,
-                      FechaDeContratacion: new Date(this.registerFechaContratacion),
-                      RolInterno: this.registerRolInterno,
-                      Salario: this.registerSalario
-                    };
-                    this.empleadoService.addEmpleado({ ...addedUser, ...specificUserData as Empleado }).subscribe();
-                  } else if (this.registerUserType === 'Vendedor') {
-                    if (!this.registerNombreTienda) {
-                      alert('Por favor, ingresa el nombre de tu tienda.');
-                      return;
-                    }
-                    specificUserData = {
-                      VendedorID: addedUser.UsuarioID,
-                      NombreDeTienda: this.registerNombreTienda,
-                      CuentaDeBanco: this.registerCuentaBanco,
-                      Activo: true
-                    };
-                    this.tiendaService.addTienda({ ...addedUser, ...specificUserData as Tienda }).subscribe();
-                  }
-
-                  // Asignar el loggedInUser combinando las propiedades del usuario base y las específicas
-                  this.loggedInUser = {
-                    ...addedUser,
-                    ...(specificUserData || {}),
-                    userType: this.registerUserType
-                  } as LoggedInUser;
-
-                  alert('¡Registro simulado exitoso para ' + this.loggedInUser.Email + ' como ' + this.loggedInUser.userType + '!');
-
-                  // Limpiar campos después del registro
-                  this.registerNombre = '';
-                  this.registerApellido = '';
-                  this.registerEmail = '';
-                  this.registerTelefono = '';
-                  this.registerPassword = '';
-                  this.registerConfirmPassword = '';
-                  this.registerUserType = 'Cliente';
-                  this.registerDireccion = '';
-                  this.registerCiudad = '';
-                  this.registerCodigoPostal = '';
-                  this.registerFechaContratacion = '';
-                  this.registerRolInterno = '';
-                  this.registerSalario = null;
-                  this.registerNombreTienda = '';
-                  this.registerCuentaBanco = '';
-
-                  this.setActiveLink('Mi Cuenta'); // Dirige al usuario a su perfil después del registro
-                },
-                (error: any) => {
-                  console.error('Error al asignar rol de usuario:', error);
-                  alert('Error al asignar rol de usuario.');
-                }
-              );
-            } else {
-              alert('Rol de usuario seleccionado no encontrado.');
+        if (typeSpecificObservable) {
+          typeSpecificObservable.subscribe(
+            (typeSpecificResponse: any) => {
+              console.log(`${this.registerUserType} data saved successfully:`, typeSpecificResponse);
+              this.registrationMessage += ` Datos de ${this.registerUserType} guardados.`;
+              this.resetRegistrationForm();
+              this.loggedInUser = { ...registeredUser, userType: this.registerUserType }; // Log in the user after successful registration
+              this.setActiveLink('Inicio'); // Redirect to home or profile
+            },
+            (typeSpecificError: any) => {
+              console.error(`Error saving ${this.registerUserType} data:`, typeSpecificError);
+              this.registrationMessage = `Registro exitoso de usuario, pero hubo un error al guardar los datos de ${this.registerUserType}.`;
             }
-          },
-          (error: any) => {
-            console.error('Error al obtener roles de usuario:', error);
-            alert('Error al obtener roles de usuario.');
-          }
-        );
+          );
+        } else {
+          this.resetRegistrationForm();
+          this.loggedInUser = { ...registeredUser, userType: this.registerUserType }; // Log in the user even if no specific data, with userType
+          this.setActiveLink('Inicio'); // Redirect to home or profile
+        }
+
       },
       (error: any) => {
-        console.error('Error al registrar usuario:', error);
-        alert('Hubo un error al registrar el usuario. El correo ya podría estar en uso.');
+        console.error('Error al registrar usuario básico:', error);
+        this.registrationMessage = `Error en el registro: ${error.message || 'Error desconocido'}`;
       }
     );
   }
+
+  // Helper to reset the registration form
+  resetRegistrationForm(): void {
+    this.registerNombre = '';
+    this.registerApellido = '';
+    this.registerEmail = '';
+    this.registerTelefono = '';
+    this.registerPassword = '';
+    this.registerConfirmPassword = '';
+    this.registerUserType = 'Cliente';
+    this.registerDireccion = '';
+    this.registerCiudad = '';
+    this.registerCodigoPostal = '';
+    this.registerFechaContratacion = '';
+    this.registerRolInterno = '';
+    this.registerSalario = null;
+    this.registerNombreTienda = '';
+    this.registerCuentaBanco = '';
+  }
+
 
   // Nuevo método para que un cliente convierta su cuenta a vendedor
   convertAccountToSeller(): void {

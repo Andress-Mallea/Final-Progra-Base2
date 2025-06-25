@@ -12,7 +12,7 @@ import { Empleado } from '../models/empleado.model';
   providedIn: 'root'
 })
 export class EmpleadoService {
-  private apiUrl = 'api/empleados'; // URL de ejemplo para la API de empleados
+  private apiUrl = 'http://localhost:5257/api/EmpleadosControlador'; // URL de ejemplo para la API de empleados
 
   // Datos simulados para demostración
   private empleados: Empleado[] = [

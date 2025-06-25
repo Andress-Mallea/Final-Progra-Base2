@@ -12,31 +12,13 @@ import { Usuario } from '../models/usuario.model';
   providedIn: 'root'
 })
 export class UsuarioService {
-  private apiUrl = 'api/usuarios'; // URL de ejemplo para la API de usuarios
+  createUsuario(usuario: Usuario): Observable<Usuario> {
+    throw new Error('Method not implemented.');
+  }
+  private apiUrl = 'http://localhost:5257/UsuariosControlador'; // URL de ejemplo para la API de usuarios
 
   // Datos simulados para demostración
-  private usuarios: Usuario[] = [
-    {
-      UsuarioID: 1,
-      Nombre: 'Ana',
-      Apellido: 'García',
-      Email: 'ana.garcia@example.com',
-      Telefono: '111-222-3333',
-      ContrasenaHash: 'hashedpass1',
-      FechaDeRegistro: new Date('2024-01-01T10:00:00Z'),
-      Activo: true
-    },
-    {
-      UsuarioID: 2,
-      Nombre: 'Carlos',
-      Apellido: 'Ruiz',
-      Email: 'carlos.ruiz@example.com',
-      Telefono: '444-555-6666',
-      ContrasenaHash: 'hashedpass2',
-      FechaDeRegistro: new Date('2024-02-15T11:30:00Z'),
-      Activo: true
-    }
-  ];
+  private usuarios: Usuario[] = [];
 
   /**
    * @constructor
@@ -105,5 +87,8 @@ export class UsuarioService {
     // En un entorno real: return this.http.delete(`${this.apiUrl}/${id}`);
     this.usuarios = this.usuarios.filter(u => u.UsuarioID !== id);
     return of(null);
+  }
+  registerUser(user: Usuario): Observable<Usuario> {
+    return this.http.post<Usuario>(this.apiUrl, user);
   }
 }

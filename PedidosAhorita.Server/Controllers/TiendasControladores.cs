@@ -37,7 +37,7 @@ namespace PedidosAhorita.Server.Controllers
         }
 
         // POST: api/Tiendas
-        [HttpPost]
+         [HttpPost]
         public ActionResult<Tiendas> PostTienda(Tiendas tienda)
         {
             if (!ModelState.IsValid)
@@ -46,16 +46,15 @@ namespace PedidosAhorita.Server.Controllers
             }
             try
             {
-                // Similar a Clientes, VendedorID debe ser un UsuarioID existente.
                 _tiendaRepository.Add(tienda);
-                return CreatedAtAction(nameof(GetTienda), new { id = tienda.VendedorID }, tienda);
+                // No necesitas CreatedAtAction si solo estás añadiendo una tienda sin un GET posterior por ID de la tienda
+                return StatusCode(201, tienda); // Retorna 201 Created y el objeto tienda
             }
             catch (Exception ex)
             {
                 return StatusCode(500, $"Error al crear tienda: {ex.Message}");
             }
         }
-
         // PUT: api/Tiendas/5
         [HttpPut("{id}")]
         public IActionResult PutTienda(int id, Tiendas tienda)

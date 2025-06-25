@@ -41,7 +41,7 @@ namespace PedidosAhorita.Server.Controllers
         // POST: api/Clientes
         // Nota: Para crear un Cliente, primero debes crear un Usuario.
         // Asume que el Usuario ya existe o lo creas aquí primero.
-        [HttpPost]
+         [HttpPost]
         public ActionResult<Cliente> PostCliente(Cliente cliente)
         {
             if (!ModelState.IsValid)
@@ -50,22 +50,10 @@ namespace PedidosAhorita.Server.Controllers
             }
             try
             {
-                // Importante: El ClienteID debe ser un UsuarioID existente.
-                // Si ClienteID es IDENTITY en C#, pero FK a Usuario, esto puede generar conflicto.
-                // Lo más común es que ClienteID NO sea IDENTITY, sino que sea el mismo UsuarioID
-                // que se inserta previamente en la tabla Usuarios.
-                // Si tu DB asigna ClienteID basado en UsuarioID, asegúrate de ello.
-
-                // Ejemplo si ClienteID es el mismo que UsuarioID:
-                // 1. Si el cliente ya viene con un UsuarioID preexistente (cliente.UsuarioID):
-                //    cliente.ClienteID = cliente.UsuarioID;
-                // 2. Si es un nuevo Usuario que se convierte en Cliente:
-                //    Primero insertar el Usuario, obtener el UsuarioID, y luego usarlo como ClienteID.
-                //    _usuarioRepository.Add(cliente as Usuario); // Si cliente hereda de Usuario
-                //    cliente.ClienteID = cliente.UsuarioID; // Asigna el ID del usuario como ClienteID
-
+                cliente.ClienteID = cliente.UsuarioID; 
                 _clienteRepository.Add(cliente);
-                return CreatedAtAction(nameof(GetCliente), new { id = cliente.ClienteID }, cliente);
+                // No necesitas CreatedAtAction si solo estás añadiendo un cliente sin un GET posterior por ID del cliente
+                return StatusCode(201, cliente); // Retorna 201 Created y el objeto cliente
             }
             catch (Exception ex)
             {
