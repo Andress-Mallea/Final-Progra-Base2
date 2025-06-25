@@ -31,7 +31,7 @@ namespace PedidosAhorita.Server
             string sqlConnectionString = "Server=MSI\\MSSQLSERVER01;Database=Pedidos-Ahorita;Integrated Security=True;TrustServerCertificate=True";
             SQL = new SQLConeccion(sqlConnectionString);
             CategoriaProductoTabla = new EjecucionConeccion<CategoriaProducto>(SQL, "CategoriaProductos","CategoriaID");
-            ClienteTabla = new EjecucionConeccion<Cliente>(SQL, "Clientes", "ClienteID");
+            ClienteTabla = new EjecucionConeccion<Cliente>(SQL, "Clientes", "UsuarioID");
             DetalleDePedidoTabla = new EjecucionConeccion<DetalleDePedido>(SQL, "DetallesDePedido", "PedidoID");
             EmpleadoTabla = new EjecucionConeccion<Empleado>(SQL, "Empleados", "EmpleadoID");
             EstadoPedidoTabla = new EjecucionConeccion<EstadoPedido>(SQL, "EstadoPedidos", "EstadoID");
@@ -40,9 +40,9 @@ namespace PedidosAhorita.Server
             PagosDetallePedidoTabla = new EjecucionConeccion<PagosDetallePedido>(SQL, "PagosDetallePedido", "PagosDetallePedidosID");
             PedidoTabla = new EjecucionConeccion<Pedido>(SQL, "Pedidos", "PedidoID");
             ProductoTabla = new EjecucionConeccion<Producto>(SQL, "Productos", "ProductoID");
-            RolDeUsuarioTabla = new EjecucionConeccion<RolDeUsuario>(SQL, "RolesDeUsuarios", "RolID");
-            TiendasTabla = new EjecucionConeccion<Tiendas>(SQL, "Tiendas", "TiendaID");
-            UsuarioRolTabla = new EjecucionConeccion<UsuarioRol>(SQL, "UsuariosRoles", "UsuarioID");
+            RolDeUsuarioTabla = new EjecucionConeccion<RolDeUsuario>(SQL, "RolesDeUsuario", "RolID");
+            TiendasTabla = new EjecucionConeccion<Tiendas>(SQL, "Vendedores", "UsuarioID");
+            UsuarioRolTabla = new EjecucionConeccion<UsuarioRol>(SQL, "UsuarioRoles", "UsuarioID");
             UsuariosTabla = new EjecucionConeccion<Usuarios>(SQL, "Usuarios", "UsuarioID");
         
             // Inicializar MongoDB

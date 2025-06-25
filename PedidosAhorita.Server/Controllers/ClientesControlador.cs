@@ -50,7 +50,7 @@ namespace PedidosAhorita.Server.Controllers
             }
             try
             {
-                cliente.ClienteID = cliente.UsuarioID; 
+                
                 _clienteRepository.Add(cliente);
                 // No necesitas CreatedAtAction si solo estás añadiendo un cliente sin un GET posterior por ID del cliente
                 return StatusCode(201, cliente); // Retorna 201 Created y el objeto cliente

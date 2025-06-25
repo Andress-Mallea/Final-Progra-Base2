@@ -29,7 +29,7 @@ namespace PedidosAhorita.Server.BaseDeDatosConeccion.SQL
             }
             return null;
         }
-
+         
         public List<T> GetAll()
         {
             string query = $"SELECT * FROM {_tableName}";
@@ -42,6 +42,37 @@ namespace PedidosAhorita.Server.BaseDeDatosConeccion.SQL
             return items;
         }
 
+        public int AddID(T entity)
+        {
+            var properties = typeof(T).GetProperties()
+                              .Where(p => p.Name != _idColumnName && p.CanRead && p.CanWrite)
+                              .ToList();
+
+            var columnNames = string.Join(", ", properties.Select(p => p.Name));
+            var parameterNames = string.Join(", ", properties.Select(p => "@" + p.Name));
+            // Usar OUTPUT INSERTED para obtener el ID generado
+            string query = $"INSERT INTO {_tableName} ({columnNames}) OUTPUT INSERTED.{_idColumnName} VALUES ({parameterNames})";
+
+            List<SqlParameter> parameters = new List<SqlParameter>();
+            foreach (var prop in properties)
+            {
+                parameters.Add(new SqlParameter($"@{prop.Name}", prop.GetValue(entity) ?? DBNull.Value));
+            }
+
+            // Ejecutar y obtener el ID generado
+            object result = _dbHelper.ExecuteScalar(query, parameters.ToArray());
+            int idGenerado = Convert.ToInt32(result);
+
+            // Asignar el ID generado a la entidad
+            var idProp = typeof(T).GetProperty(_idColumnName);
+            if (idProp != null && idProp.CanWrite)
+            {
+                idProp.SetValue(entity, idGenerado);
+            }
+
+            return idGenerado;
+        }
+       
         public void Add(T entity)
         {
             // Para una implementación robusta de Add con IDENTITY en SQL Server:
@@ -65,6 +96,7 @@ namespace PedidosAhorita.Server.BaseDeDatosConeccion.SQL
 
             _dbHelper.ExecuteNonQuery(query, parameters.ToArray());
         }
+
 
         public void Update(T entity)
         {

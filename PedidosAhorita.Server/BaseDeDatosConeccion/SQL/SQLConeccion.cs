@@ -122,6 +122,18 @@ namespace PedidosAhorita.Server.BaseDeDatosConeccion.SQL
             }
             return item;
         }
-
+        public object ExecuteScalar(string query, SqlParameter[] parameters)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            using (var command = new SqlCommand(query, connection))
+            {
+                if (parameters != null)
+                {
+                    command.Parameters.AddRange(parameters);
+                }
+                connection.Open();
+                return command.ExecuteScalar();
+            }
+        }
     }
 }

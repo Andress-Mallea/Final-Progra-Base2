@@ -15,22 +15,7 @@ export class ClienteService {
   private apiUrl = 'http://localhost:5257/api/ClientesControlador'; // URL de ejemplo para la API de clientes
 
   // Datos simulados para demostración
-  private clientes: Cliente[] = [
-    {
-      UsuarioID: 1,
-      Nombre: 'Ana',
-      Apellido: 'García',
-      Email: 'ana.garcia@example.com',
-      Telefono: '111-222-3333',
-      ContrasenaHash: 'hashedpass1',
-      FechaDeRegistro: new Date('2024-01-01T10:00:00Z'),
-      Activo: true,
-      ClienteID: 1,
-      Direccion: 'Calle Falsa 123',
-      Ciudad: 'Springfield',
-      CodigoPostal: '12345'
-    }
-  ];
+  private clientes: Cliente[] = [];
 
   /**
    * @constructor
@@ -66,11 +51,7 @@ export class ClienteService {
    * @returns {Observable<Cliente>} Un Observable que emite el cliente agregado (con su ClienteID asignado).
    */
   addCliente(cliente: Cliente): Observable<Cliente> {
-    // En un entorno real: return this.http.post<Cliente>(this.apiUrl, cliente);
-    const newId = this.clientes.length > 0 ? Math.max(...this.clientes.map(c => c.ClienteID)) + 1 : 1;
-    const newCliente = { ...cliente, ClienteID: newId, UsuarioID: newId }; // Simula UsuarioID también
-    this.clientes.push(newCliente);
-    return of(newCliente);
+  return this.http.post<Cliente>(this.apiUrl, cliente);
   }
 
   /**
