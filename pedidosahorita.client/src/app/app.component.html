@@ -41,9 +41,9 @@
     <p>Explora una variedad de tiendas y sus productos.</p>
     <div class="store-list">
       <div *ngFor="let tienda of tiendas" class="store-item">
-        <h3>{{ tienda.NombreDeTienda }}</h3>
-        <p>Email: {{ tienda.Email }}</p>
-        <p *ngIf="tienda.Telefono">Teléfono: {{ tienda.Telefono }}</p>
+        <h3>{{ tienda.nombreDeTienda }}</h3>
+        <p>Cuenta de Banco: {{ tienda.CuentaDeBanco }}</p>
+        <p *ngIf="tienda.Activo">Activa</p>
         <button (click)="viewStoreProducts(tienda)">Ver Productos</button>
       </div>
       <p *ngIf="tiendas.length === 0" style="text-align: center; width: 100%; color: #ccc;">No hay tiendas disponibles actualmente.</p>
@@ -51,21 +51,21 @@
   </div>
 
   <ng-template #storeDetailView>
-    <h2>Productos de {{ selectedStore?.NombreDeTienda }}</h2>
-    <button class="back-button" (click)="backToStoreList()">Volver a Tiendas</button>
-    <div class="product-list-for-store">
-      <div *ngFor="let product of storeProducts" class="product-item">
-        <img [src]="product.imagen || 'https://placehold.co/300x200/cccccc/333333?text=Producto'" alt="{{ product.nombre }}">
-        <h3>{{ product.nombre }}</h3>
-        <p>{{ product.descripcion }}</p>
-        <p class="product-price">${{ product.precio?.toFixed(2) }}</p>
-        <div class="product-actions">
-          <button class="add-to-cart-button" (click)="addToCart(product)">Agregar al carrito</button>
-          <button class="description-button" (click)="viewProductDetail(product)">Descripción</button>
-        </div>
+    <h2>Productos de {{ selectedStore?.nombreDeTienda }}</h2>
+  <button class="back-button" (click)="backToStoreList()">Volver a Tiendas</button>
+  <div class="product-list-for-store">
+    <div *ngFor="let product of storeProducts" class="product-item">
+      <img [src]="product.imagen || 'https://placehold.co/300x200/cccccc/333333?text=Producto'" alt="{{ product.nombre }}">
+      <h3>{{ product.nombre }}</h3>
+      <p>{{ product.descripcion }}</p>
+      <p class="product-price">${{ product.precio?.toFixed(2) }}</p>
+      <div class="product-actions">
+        <button class="add-to-cart-button" (click)="addToCart(product)">Agregar al carrito</button>
+        <button class="description-button" (click)="viewProductDetail(product)">Descripción</button>
       </div>
-      <p *ngIf="storeProducts.length === 0" style="text-align: center; width: 100%; color: #ccc;">No hay productos disponibles en esta tienda.</p>
     </div>
+    <p *ngIf="storeProducts.length === 0" style="text-align: center; width: 100%; color: #ccc;">No hay productos disponibles en esta tienda.</p>
+  </div>
   </ng-template>
 </section>
 
@@ -360,8 +360,8 @@
   <div *ngIf="user.userType === 'Vendedor'">
     <h3 class="section-title">Datos de Tienda / Vendedor</h3>
     <div class="profile-detail">
-      <p><strong>ID de Vendedor:</strong> {{ user.VendedorID }}</p>
-      <p *ngIf="user.NombreDeTienda"><strong>Nombre de Tienda:</strong> {{ user.NombreDeTienda }}</p>
+      <p><strong>ID de Vendedor:</strong> {{ user.vendedorID }}</p>
+      <p *ngIf="user.nombreDeTienda"><strong>Nombre de Tienda:</strong> {{ user.nombreDeTienda }}</p>
       <p *ngIf="user.CuentaDeBanco"><strong>Cuenta de Banco:</strong> {{ user.CuentaDeBanco }}</p>
     </div>
   </div>
