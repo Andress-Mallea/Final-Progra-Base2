@@ -8,7 +8,7 @@ using System.Reflection; // Para GetProperty
 
 namespace PedidosAhorita.Server.BaseDeDatosConeccion.MongoDB
 {
-    public class EjecucionMongo<TDocument> where TDocument : class
+    public class EjecucionMongo<TDocument> : InterfasGenericaM<TDocument> where TDocument : class
     {
         private readonly MongoConeccion _dbHelper;
         private readonly IMongoCollection<TDocument> _collection;
@@ -68,6 +68,41 @@ namespace PedidosAhorita.Server.BaseDeDatosConeccion.MongoDB
         public List<TDocument> Find(FilterDefinition<TDocument> filter)
         {
             return _collection.Find(filter).ToList();
+        }
+        public List<TDocument> FilterBy(Func<TDocument, bool> filter)
+        {
+            return _collection.AsQueryable().Where(filter).ToList();
+        }
+
+        public void ReplaceOne(TDocument document)
+        {
+            var idProp = typeof(TDocument).GetProperty("Id") ?? typeof(TDocument).GetProperty("_id");
+            var id = idProp?.GetValue(document)?.ToString();
+            if (id != null)
+            {
+                var filter = Builders<TDocument>.Filter.Eq("_id", id);
+                _collection.ReplaceOne(filter, document);
+            }
+        }
+
+        public void InsertOne(TDocument document)
+        {
+            _collection.InsertOne(document);
+        }
+
+        public void DeleteOne(Func<TDocument, bool> filter)
+        {
+            var doc = _collection.AsQueryable().FirstOrDefault(filter);
+            if (doc != null)
+            {
+                var idProp = typeof(TDocument).GetProperty("Id") ?? typeof(TDocument).GetProperty("_id");
+                var id = idProp?.GetValue(doc)?.ToString();
+                if (id != null)
+                {
+                    var mongoFilter = Builders<TDocument>.Filter.Eq("_id", id);
+                    _collection.DeleteOne(mongoFilter);
+                }
+            }
         }
     }
 }
