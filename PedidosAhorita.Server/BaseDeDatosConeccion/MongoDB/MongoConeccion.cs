@@ -7,12 +7,25 @@ namespace PedidosAhorita.Server.BaseDeDatosConeccion.MongoDB
     {
         private readonly IMongoClient _client;
         private readonly string _databaseName;
+        private readonly IMongoDatabase _database;
 
         public MongoConeccion(string connectionString, string databaseName)
         {
             _client = new MongoClient(connectionString);
-            _databaseName = databaseName ?? throw new ArgumentNullException(nameof(databaseName));
+            _databaseName = databaseName;
+            _database = _client.GetDatabase(databaseName);
         }
+
+        // Este método es crucial para obtener tu repositorio genérico de MongoDB
+        public InterfasGenericaM<TDocument> GetRepository<TDocument>(string collectionName) // Usamos tu InterfasGenericaM
+            where TDocument : class
+        {
+            // Retorna una nueva instancia de tu clase EjecucionMongo
+            return new EjecucionMongo<TDocument>(this, collectionName); 
+        }
+
+        // Opcional: Propiedad para acceder directamente a la base de datos si es necesario en otros lugares
+        public IMongoDatabase Database => _database;
 
         public IMongoDatabase GetDatabase()
         {
