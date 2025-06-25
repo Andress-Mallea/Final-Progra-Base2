@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace PedidosAhorita.Server.Tablas
 {
-    public class Empleado : Usuarios
+    public class Empleado 
     {
         public int EmpleadoID { get; set; } // Clave Primaria (PK) y FK a Usuarios
         public DateTime FechaDeContratacion { get; set; } // DATE NOT NULL en DB

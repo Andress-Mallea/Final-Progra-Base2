@@ -493,12 +493,13 @@ this.http.post<any>('http://localhost:5257/api/UsuariosControlador/login', {
 
     // Prepare the basic Usuario object
     const registroCompleto: any = {
-      tipo: this.registerUserType, // 'Cliente', 'Empleado' o 'Vendedor'
-      nombre: this.registerNombre,
-      apellido: this.registerApellido,
-      email: this.registerEmail,
-      contrasena: this.registerPassword
-    };
+    tipo: this.registerUserType, // 'Cliente', 'Empleado' o 'Vendedor'
+    nombre: this.registerNombre,
+    apellido: this.registerApellido,
+    email: this.registerEmail,
+    contrasena: this.registerPassword,
+    tipodeusuario: this.registerUserType, // 'Cliente', 'Empleado' o 'Vendedor'
+  };
 
     // First, register the basic user information
     if (this.registerUserType === 'Cliente') {

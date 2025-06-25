@@ -13,7 +13,11 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PedidosAhorita.Server")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+<<<<<<< HEAD
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+13b87368f23d27f21b74b86364372fb2bc4e1f20")]
+=======
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+974275f90fe95841c5bcb3ca486479709a776fc8")]
+>>>>>>> a6d58cea8b1c8b93c49f780b5f35d10662ef6558
 [assembly: System.Reflection.AssemblyProductAttribute("PedidosAhorita.Server")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PedidosAhorita.Server")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
