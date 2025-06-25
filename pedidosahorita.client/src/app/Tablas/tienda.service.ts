@@ -16,19 +16,14 @@ export class TiendaService {
 
   // Datos simulados para demostración
   private tiendas: Tienda[] = [
-    {
-      UsuarioID: 3,
-      Nombre: 'Pedro',
-      Apellido: 'Martínez',
-      Email: 'pedro.martinez@mitienda.com',
-      Telefono: '777-888-9999',
-      ContrasenaHash: 'hashedpass3',
-      FechaDeRegistro: new Date('2024-03-01T09:00:00Z'),
-      Activo: true,
-      VendedorID: 201,
-      NombreDeTienda: 'Mi Tienda de Electrónica',
-      CuentaDeBanco: 'ES9876543210'
-    }
+    // Asumiendo que VendedorID es el mismo que UsuarioID para simplificar
+    { UsuarioID: 3, Nombre: 'Carlos', Apellido: 'Lopez', Email: 'carlos@example.com', Telefono: '', ContrasenaHash: 'password123', FechaDeRegistro: new Date('2023-03-15'), Activo: true, VendedorID: 3, NombreDeTienda: 'GadgetZone', CuentaDeBanco: 'BANK12345'},
+    { UsuarioID: 1, Nombre: 'Juan', Apellido: 'Perez', Email: 'juan@example.com', Telefono: '111-222-3333', ContrasenaHash: 'password123', FechaDeRegistro: new Date('2023-01-01'), Activo: true, VendedorID: 1, NombreDeTienda: 'TechHub', CuentaDeBanco: 'BANK67890'}, // Cliente que también es vendedor
+    // Nuevas tiendas añadidas:
+    { UsuarioID: 4, Nombre: 'Ana', Apellido: 'Diaz', Email: 'ana@example.com', Telefono: '987-654-3210', ContrasenaHash: 'password123', FechaDeRegistro: new Date('2023-06-01'), Activo: true, VendedorID: 4, NombreDeTienda: 'EcoVida', CuentaDeBanco: 'ECOBANK001'},
+    { UsuarioID: 6, Nombre: 'Luis', Apellido: 'Vega', Email: 'luis@example.com', Telefono: '123-456-7890', ContrasenaHash: 'password123', FechaDeRegistro: new Date('2023-07-10'), Activo: true, VendedorID: 6, NombreDeTienda: 'LibrosYA', CuentaDeBanco: 'BOOKBANK002'},
+    { UsuarioID: 7, Nombre: 'Sofía', Apellido: 'Martínez', Email: 'sofia@example.com', Telefono: '555-111-2222', ContrasenaHash: 'password123', FechaDeRegistro: new Date('2023-08-15'), Activo: true, VendedorID: 7, NombreDeTienda: 'ModaExpress', CuentaDeBanco: 'FASHIONBANK003'},
+    { UsuarioID: 8, Nombre: 'Roberto', Apellido: 'González', Email: 'roberto@example.com', Telefono: '333-444-5555', ContrasenaHash: 'password123', FechaDeRegistro: new Date('2023-09-01'), Activo: true, VendedorID: 8, NombreDeTienda: 'Juguetería Feliz', CuentaDeBanco: 'TOYBANK004'}
   ];
 
   /**

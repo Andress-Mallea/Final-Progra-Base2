@@ -1,91 +1,55 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { PagosDetallePedido } from '../models/pagos-detalle-pedido.model';
+// src/app/services/pagos-detalle-pedido.service.ts (Actualizado con más mock data)
 
-/**
- * @injectable
- * @description Servicio para gestionar las operaciones CRUD de PagosDetallePedido.
- * Simula interacciones con un backend.
- */
+import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { PagosDetallePedido } from '../models/pagos-detalle-pedido.model'; // Usa la interfaz PascalCase
+
 @Injectable({
   providedIn: 'root'
 })
 export class PagosDetallePedidoService {
-  private apiUrl = 'api/pagosdetallepedido'; // URL de ejemplo, reemplazar con la URL real de tu API
-
-  // Datos simulados para demostración
   private pagosDetalles: PagosDetallePedido[] = [
-    { PagosDetallePedidosID: 1, PagoID: 1, PedidoID: 1, MontoCorrespondiente: 1280.00 },
-    { PagosDetallePedidosID: 2, PagoID: 2, PedidoID: 3, MontoCorrespondiente: 300.00 }
+    { PagosDetallePedidosID: 1, PagoID: 1, PedidoID: 1, MontoCorrespondiente: 1380.00 },
+    { PagosDetallePedidosID: 2, PagoID: 2, PedidoID: 2, MontoCorrespondiente: 270.00 },
+    { PagosDetallePedidosID: 3, PagoID: 3, PedidoID: 3, MontoCorrespondiente: 135.00 },
+    { PagosDetallePedidosID: 4, PagoID: 4, PedidoID: 4, MontoCorrespondiente: 62.00 },
   ];
 
-  /**
-   * @constructor
-   * @param {HttpClient} http - Inyecta el servicio HttpClient.
-   */
-  constructor(private http: HttpClient) { }
+  constructor() { }
 
-  /**
-   * @method getPagosDetallePedido
-   * @description Obtiene todas las relaciones PagosDetallePedido.
-   * @returns {Observable<PagosDetallePedido[]>} Un Observable que emite un array de PagosDetallePedido.
-   */
   getPagosDetallePedido(): Observable<PagosDetallePedido[]> {
-    // En un entorno real: return this.http.get<PagosDetallePedido[]>(this.apiUrl);
     return of(this.pagosDetalles);
   }
 
-  /**
-   * @method getPagosDetallePedidoById
-   * @description Obtiene una relación PagosDetallePedido por su ID.
-   * @param {number} id - El ID de la relación a obtener.
-   * @returns {Observable<PagosDetallePedido | undefined>} Un Observable que emite la relación encontrada o undefined.
-   */
   getPagosDetallePedidoById(id: number): Observable<PagosDetallePedido | undefined> {
-    // En un entorno real: return this.http.get<PagosDetallePedido>(`${this.apiUrl}/${id}`);
-    return of(this.pagosDetalles.find(p => p.PagosDetallePedidosID === id));
+    const pagoDetalle = this.pagosDetalles.find(p => p.PagosDetallePedidosID === id);
+    return of(pagoDetalle);
   }
 
-  /**
-   * @method addPagosDetallePedido
-   * @description Agrega una nueva relación PagosDetallePedido.
-   * @param {PagosDetallePedido} relacion - La relación a agregar.
-   * @returns {Observable<PagosDetallePedido>} Un Observable que emite la relación agregada (con su ID asignado).
-   */
-  addPagosDetallePedido(relacion: PagosDetallePedido): Observable<PagosDetallePedido> {
-    // En un entorno real: return this.http.post<PagosDetallePedido>(this.apiUrl, relacion);
+  getPagosDetallePedidoByPedidoId(pedidoId: number): Observable<PagosDetallePedido | undefined> {
+    const pagoDetalle = this.pagosDetalles.find(p => p.PedidoID === pedidoId);
+    return of(pagoDetalle);
+  }
+
+  addPagosDetallePedido(pagoDetalle: PagosDetallePedido): Observable<PagosDetallePedido> {
     const newId = this.pagosDetalles.length > 0 ? Math.max(...this.pagosDetalles.map(p => p.PagosDetallePedidosID)) + 1 : 1;
-    const newRelacion = { ...relacion, PagosDetallePedidosID: newId };
-    this.pagosDetalles.push(newRelacion);
-    return of(newRelacion);
+    const newPagoDetalle: PagosDetallePedido = { ...pagoDetalle, PagosDetallePedidosID: newId };
+    this.pagosDetalles.push(newPagoDetalle);
+    return of(newPagoDetalle);
   }
 
-  /**
-   * @method updatePagosDetallePedido
-   * @description Actualiza una relación PagosDetallePedido existente.
-   * @param {PagosDetallePedido} relacion - La relación a actualizar. Debe contener el PagosDetallePedidosID.
-   * @returns {Observable<any>} Un Observable que emite una respuesta vacía o un indicador de éxito.
-   */
-  updatePagosDetallePedido(relacion: PagosDetallePedido): Observable<any> {
-    // En un entorno real: return this.http.put(`${this.apiUrl}/${relacion.PagosDetallePedidosID}`, relacion);
-    const index = this.pagosDetalles.findIndex(p => p.PagosDetallePedidosID === relacion.PagosDetallePedidosID);
-    if (index > -1) {
-      this.pagosDetalles[index] = relacion;
-      return of(relacion);
+  updatePagosDetallePedido(pagoDetalle: PagosDetallePedido): Observable<PagosDetallePedido | null> {
+    const index = this.pagosDetalles.findIndex(p => p.PagosDetallePedidosID === pagoDetalle.PagosDetallePedidosID);
+    if (index !== -1) {
+      this.pagosDetalles[index] = { ...this.pagosDetalles[index], ...pagoDetalle };
+      return of(this.pagosDetalles[index]);
     }
     return of(null);
   }
 
-  /**
-   * @method deletePagosDetallePedido
-   * @description Elimina una relación PagosDetallePedido por su ID.
-   * @param {number} id - El ID de la relación a eliminar.
-   * @returns {Observable<any>} Un Observable que emite una respuesta vacía o un indicador de éxito.
-   */
-  deletePagosDetallePedido(id: number): Observable<any> {
-    // En un entorno real: return this.http.delete(`${this.apiUrl}/${id}`);
+  deletePagosDetallePedido(id: number): Observable<boolean> {
+    const initialLength = this.pagosDetalles.length;
     this.pagosDetalles = this.pagosDetalles.filter(p => p.PagosDetallePedidosID !== id);
-    return of(null);
+    return of(this.pagosDetalles.length < initialLength);
   }
 }
