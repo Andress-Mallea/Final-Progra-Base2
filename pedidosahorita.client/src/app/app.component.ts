@@ -22,6 +22,7 @@ import { Pago } from './models/pago.model';
 import { PagosDetallePedido } from './models/pagos-detalle-pedido.model';
 import { Pedido } from './models/pedido.model';
 
+
 // Importa los servicios (mockeados)
 import { ProductoService } from './Tablas/producto.service';
 import { UsuarioService } from './Tablas/usuario.service';
@@ -161,14 +162,16 @@ export class AppComponent implements OnInit {
     this.loadTiendas(); // Carga todas las tiendas para la vista de inicio
   }
 
+  // Cambia loadProducts para obtener productos del backend y usar los nombres correctos
   loadProducts(): void {
     this.productoService.getProductos().subscribe(
       (data: Producto[]) => {
         this.products = data;
-        console.log('Productos cargados:', this.products); // Log para depuración
+        console.log('Productos cargados (desde backend):', this.products);
       },
       (error: any) => {
         console.error('Error al cargar productos:', error);
+        alert('Error al cargar productos desde el backend.');
       }
     );
   }
@@ -189,7 +192,7 @@ export class AppComponent implements OnInit {
   viewStoreProducts(store: Tienda): void {
     this.selectedStore = store;
     // Filtra los productos que pertenecen a esta tienda por su VendedorID
-    this.storeProducts = this.products.filter(p => p.VendedorID === store.VendedorID);
+    this.storeProducts = this.products.filter(p => p.vendedorID === store.VendedorID);
     this.currentActiveLink = 'StoreDetail'; // Nuevo estado para la vista de detalles de tienda
     this.showShoppingCartMenu = false;
     this.showSellMenu = false;
@@ -215,7 +218,7 @@ export class AppComponent implements OnInit {
   }
 
   removeFromCart(productToRemove: Producto): void {
-    const index = this.cartItems.findIndex(product => product.id === productToRemove.id);
+    const index = this.cartItems.findIndex(product => product.productoID === productToRemove.productoID);
     if (index !== -1) {
       this.cartItems.splice(index, 1);
       console.log('Producto eliminado del carrito:', productToRemove);
@@ -223,7 +226,8 @@ export class AppComponent implements OnInit {
   }
 
   getTotalCartAmount(): number {
-    return this.cartItems.reduce((total, item) => total + item.price, 0);
+    // Se añade una verificación para asegurar que item.Precio no sea undefined/null
+    return this.cartItems.reduce((total, item) => total + (item.precio || 0), 0);
   }
 
   toggleShoppingCartMenu(): void {
@@ -260,7 +264,7 @@ export class AppComponent implements OnInit {
     this.showProductsMenu = false; // Ocultar el menú general de productos
     // Asegurarse de que la vista de la tienda no esté activa
     this.selectedStore = null;
-    console.log('Viendo detalles de:', product.name);
+    console.log('Viendo detalles de:', product.nombre);
   }
 
   setActiveLink(linkName: string): void {
@@ -336,13 +340,11 @@ export class AppComponent implements OnInit {
       return;
     }
 
-    // AHORA SOLO UN VENDEDOR PUEDE SUBIR PRODUCTOS
     if (!this.loggedInUser || this.loggedInUser.userType !== 'Vendedor') {
       alert('Solo los vendedores pueden subir productos. Por favor, convierte tu cuenta a vendedor.');
       return;
     }
 
-    // Si el usuario es un vendedor, obtenemos su VendedorID
     const sellerId = (this.loggedInUser as Tienda).VendedorID;
 
     if (sellerId === undefined) {
@@ -351,32 +353,30 @@ export class AppComponent implements OnInit {
     }
 
     const newProduct: Producto = {
-      id: 0, // El ID será asignado por el servicio o backend
-      name: this.newProductName,
-      description: this.newProductDescription,
-      price: this.newProductPrice,
-      image: this.newProductImage,
-      VendedorID: sellerId, // Asignamos el ID del usuario logueado como vendedor (PascalCase)
-      StockDisponible: 1, // Valor por defecto, se podría añadir un campo al formulario (PascalCase)
-      Activo: true, // Por defecto activo (PascalCase)
-      FechaCreacion: new Date() // Fecha actual (PascalCase)
+      productoID: 0, // El ID será asignado por el backend
+      nombre: this.newProductName,
+      descripcion: this.newProductDescription,
+      precio: this.newProductPrice,
+      imagen: this.newProductImage,
+      vendedorID: sellerId,
+      cantidad: 1, // O el campo que corresponda en tu modelo
+      activo: true,
+      fechaCreacion: new Date()
     };
 
     this.productoService.addProducto(newProduct).subscribe(
       (addedProduct: Producto) => {
         this.products.push(addedProduct);
-        // Si el usuario es un vendedor, añadirlo a su lista de productos en venta
         if (this.loggedInUser && this.loggedInUser.userType === 'Vendedor') {
-          this.sellingProducts = [...this.sellingProducts, addedProduct]; // Asegura la reactividad
+          this.sellingProducts = [...this.sellingProducts, addedProduct];
         }
         console.log('Producto subido:', addedProduct);
-        alert('¡Producto "' + addedProduct.name + '" subido con éxito!');
-
+        alert('¡Producto "' + addedProduct.nombre + '" subido con éxito!');
         this.newProductName = '';
         this.newProductDescription = '';
         this.newProductPrice = null;
         this.newProductImage = '';
-        this.setActiveLink('Productos'); // Redirige a la vista de productos generales
+        this.setActiveLink('Productos');
       },
       (error: any) => {
         console.error('Error al subir producto:', error);
@@ -436,48 +436,50 @@ export class AppComponent implements OnInit {
   }
 
   loginUser(): void {
-  if (!this.loginEmail || !this.loginPassword) {
-    alert('Por favor, ingresa tu correo y contraseña.');
-    return;
-  }
-
-  // Llama al backend con email y contraseña
-  this.http.post<any>('http://localhost:5257/api/UsuariosControlador/login', {
-    email: this.loginEmail,
-    contrasena: this.loginPassword
-  }).subscribe(
-    (response: any) => {
-      if (response && response.usuario) {
-        // El backend debe devolver un objeto con usuario, userType y datos extra según el rol
-        this.loggedInUser = response.usuario as LoggedInUser;
-
-        // Si es cliente, carga historial de pedidos
-        if (this.loggedInUser.userType === 'Cliente') {
-          this.loadCustomerOrders(this.loggedInUser.UsuarioID);
-        }
-        // Si es vendedor, carga productos en venta
-        if (this.loggedInUser.userType === 'Vendedor') {
-          this.productoService.getProductos().subscribe(allProducts => {
-            this.sellingProducts = allProducts.filter(p => p.VendedorID === this.loggedInUser!.VendedorID);
-          });
-        }
-
-        alert('¡Inicio de sesión exitoso como ' + this.loggedInUser.Email + ' con rol: ' + this.loggedInUser.userType + '!');
-        this.loginEmail = '';
-        this.loginPassword = '';
-        this.setActiveLink('Mi Cuenta');
-      } else {
-        console.error('Login fallido: usuario no encontrado o datos incorrectos');
-        alert('Correo o contraseña incorrectos.');
-        this.loggedInUser = null;
-      }
-    },
-    (error: any) => {
-      console.error('Error en el login:', error);
-      alert('Error al intentar iniciar sesión.');
+    if (!this.loginEmail || !this.loginPassword) {
+      alert('Por favor, ingresa tu correo y contraseña.');
+      return;
     }
-  );
-}
+
+    // Usar el servicio de usuario para el login
+    this.usuarioService.loginUser(this.loginEmail, this.loginPassword).subscribe(
+      (response: any) => {
+        if (response && response.usuario) {
+          // El backend debe devolver un objeto con usuario, userType y datos extra según el rol
+          this.loggedInUser = response.usuario as LoggedInUser;
+
+          // Si es cliente, carga historial de pedidos
+          if (this.loggedInUser.userType === 'Cliente') {
+            this.loadCustomerOrders(this.loggedInUser.UsuarioID);
+          }
+          // Si es vendedor, carga productos en venta
+          if (this.loggedInUser.userType === 'Vendedor') {
+            this.productoService.getProductos().subscribe(allProducts => {
+              this.sellingProducts = allProducts.filter(p => p.vendedorID === this.loggedInUser!.VendedorID);
+            });
+          }
+
+          alert('¡Inicio de sesión exitoso como ' + this.loggedInUser.Email + ' con rol: ' + this.loggedInUser.userType + '!');
+          this.loginEmail = '';
+          this.loginPassword = '';
+          this.setActiveLink('Mi Cuenta');
+        } else {
+          console.error('Login fallido: usuario no encontrado o datos incorrectos');
+          alert('Correo o contraseña incorrectos.');
+          this.loggedInUser = null;
+        }
+      },
+      (error: any) => {
+        console.error('Error en el login:', error);
+        // Manejar errores específicos del backend si se envían en la respuesta de error
+        if (error.error && error.error.mensaje) {
+          alert('Error al intentar iniciar sesión: ' + error.error.mensaje);
+        } else {
+          alert('Error al intentar iniciar sesión.');
+        }
+      }
+    );
+  }
 
 
   registerUser(): void {
@@ -490,40 +492,46 @@ export class AppComponent implements OnInit {
 
     // Prepare the basic Usuario object
     const registroCompleto: any = {
-    tipo: this.registerUserType, // 'Cliente', 'Empleado' o 'Vendedor'
-    nombre: this.registerNombre,
-    apellido: this.registerApellido,
-    email: this.registerEmail,
-    contrasena: this.registerPassword
-  };
+      tipo: this.registerUserType, // 'Cliente', 'Empleado' o 'Vendedor'
+      nombre: this.registerNombre,
+      apellido: this.registerApellido,
+      email: this.registerEmail,
+      contrasena: this.registerPassword
+    };
 
     // First, register the basic user information
     if (this.registerUserType === 'Cliente') {
-    registroCompleto.direccion = this.registerDireccion;
-    registroCompleto.ciudad = this.registerCiudad;
-    registroCompleto.codigoPostal = this.registerCodigoPostal;
-  } else if (this.registerUserType === 'Empleado') {
-    registroCompleto.fechaDeContratacion = this.registerFechaContratacion;
-    registroCompleto.rolInterno = this.registerRolInterno;
-    registroCompleto.salario = this.registerSalario;
-  } else if (this.registerUserType === 'Vendedor') {
-    registroCompleto.nombreDeTienda = this.registerNombreTienda;
-    registroCompleto.cuentaDeBanco = this.registerCuentaBanco;
+      registroCompleto.direccion = this.registerDireccion;
+      registroCompleto.ciudad = this.registerCiudad;
+      registroCompleto.codigoPostal = this.registerCodigoPostal;
+    } else if (this.registerUserType === 'Empleado') {
+      registroCompleto.fechaDeContratacion = this.registerFechaContratacion;
+      registroCompleto.rolInterno = this.registerRolInterno;
+      registroCompleto.salario = this.registerSalario;
+    } else if (this.registerUserType === 'Vendedor') {
+      registroCompleto.nombreDeTienda = this.registerNombreTienda;
+      registroCompleto.cuentaDeBanco = this.registerCuentaBanco;
+    }
+
+    // Usar el servicio de usuario para el registro
+    this.usuarioService.registerCompleteUser(registroCompleto)
+      .subscribe(
+        (response: any) => {
+          this.registrationMessage = 'Registro exitoso. ¡Bienvenido!';
+          this.resetRegistrationForm();
+          // Puedes guardar el usuario logueado aquí si el backend lo retorna
+          this.setActiveLink('Inicio');
+        },
+        (error: any) => {
+          console.error('Error en el registro:', error);
+          this.registrationMessage = `Error en el registro: ${error.message || 'Error desconocido'}`;
+          // Manejar errores específicos del backend si se envían en la respuesta de error
+          if (error.error && error.error.mensaje) {
+            this.registrationMessage = error.error.mensaje;
+          }
+        }
+      );
   }
-  this.http.post('http://localhost:5257/api/UsuariosControlador/registrar-completo', registroCompleto)
-    .subscribe(
-      (response: any) => {
-        this.registrationMessage = 'Registro exitoso. ¡Bienvenido!';
-        this.resetRegistrationForm();
-        // Puedes guardar el usuario logueado aquí si el backend lo retorna
-        this.setActiveLink('Inicio');
-      },
-      (error: any) => {
-        console.error('Error en el registro:', error);
-        this.registrationMessage = `Error en el registro: ${error.message || 'Error desconocido'}`;
-      }
-    );
-}
 
 // Helper to reset the registration form
 resetRegistrationForm(): void {
@@ -644,7 +652,7 @@ resetRegistrationForm(): void {
 
     // Recargar productos de venta para el nuevo vendedor
     this.productoService.getProductos().subscribe(allProducts => {
-      this.sellingProducts = allProducts.filter(p => p.VendedorID === this.loggedInUser!.VendedorID);
+      this.sellingProducts = allProducts.filter(p => p.vendedorID === this.loggedInUser!.VendedorID);
     });
 
     alert('¡Felicidades! Tu cuenta ha sido convertida a vendedor exitosamente.');

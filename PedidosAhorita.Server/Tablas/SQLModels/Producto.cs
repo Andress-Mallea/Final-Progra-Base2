@@ -17,5 +17,8 @@ namespace PedidosAhorita.Server.Tablas
         public string? ImagenURL { get; set; } // NVARCHAR(255) NULL en DB
         public DateTime FechaCreacion { get; set; } // DATETIME DEFAULT GETDATE() en DB
         public bool Activo { get; set; } // BIT DEFAULT 1 en DB
+        public int Cantidad { get; set; } // Opcional, para compatibilidad con Mongo
+        public string? Imagen { get; set; } // Opcional, para compatibilidad con Mongo
+
     }
 }
