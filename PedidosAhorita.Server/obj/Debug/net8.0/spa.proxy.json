@@ -3,7 +3,7 @@
 "ServerUrl": "https://localhost:49902",
 "RedirectUrl": "",
 "LaunchCommand": "npm start",
-"WorkingDirectory": "C:\\Users\\MSI LAPTOP\\Desktop\\ExamenFinal-Progra2\\PedidosAhorita\\PedidosAhorita.Server\\..\\pedidosahorita.client",
+"WorkingDirectory": "C:\\Users\\Mijael Ander\\Documents\\baseprogra2\\Final-Progra-Base2\\PedidosAhorita.Server\\..\\pedidosahorita.client",
 "MaxTimeoutInSeconds": "120",
 "KeepRunning": "false"
 }

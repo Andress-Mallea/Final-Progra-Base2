@@ -2618,31 +2618,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\MSI LAPTOP\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\Mijael Ander\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\MSI LAPTOP\\Desktop\\ExamenFinal-Progra2\\PedidosAhorita\\PedidosAhorita.Server\\PedidosAhorita.Server.csproj",
+      "projectUniqueName": "C:\\Users\\Mijael Ander\\Documents\\baseprogra2\\Final-Progra-Base2\\PedidosAhorita.Server\\PedidosAhorita.Server.csproj",
       "projectName": "PedidosAhorita.Server",
-      "projectPath": "C:\\Users\\MSI LAPTOP\\Desktop\\ExamenFinal-Progra2\\PedidosAhorita\\PedidosAhorita.Server\\PedidosAhorita.Server.csproj",
-      "packagesPath": "C:\\Users\\MSI LAPTOP\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\MSI LAPTOP\\Desktop\\ExamenFinal-Progra2\\PedidosAhorita\\PedidosAhorita.Server\\obj\\",
+      "projectPath": "C:\\Users\\Mijael Ander\\Documents\\baseprogra2\\Final-Progra-Base2\\PedidosAhorita.Server\\PedidosAhorita.Server.csproj",
+      "packagesPath": "C:\\Users\\Mijael Ander\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Mijael Ander\\Documents\\baseprogra2\\Final-Progra-Base2\\PedidosAhorita.Server\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\MSI LAPTOP\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\Mijael Ander\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -2661,7 +2654,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.200"
+      "SdkAnalysisLevel": "9.0.300"
     },
     "frameworks": {
       "net8.0": {
@@ -2703,7 +2696,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.301/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

@@ -1,1 +1,2 @@
 C:\Users\MSI LAPTOP\Desktop\ExamenFinal-Progra2\PedidosAhorita\pedidosahorita.client\obj\Debug\pedidosahorita.client.esproj.CoreCompileInputs.cache
+C:\Users\Mijael Ander\Documents\baseprogra2\Final-Progra-Base2\pedidosahorita.client\obj\Debug\pedidosahorita.client.esproj.CoreCompileInputs.cache

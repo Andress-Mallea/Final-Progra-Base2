@@ -12,7 +12,7 @@ import { Tienda } from '../models/tienda.model';
   providedIn: 'root'
 })
 export class TiendaService {
-  private apiUrl = 'http://localhost:5257/api/TiendasControladores'; // URL de ejemplo para la API de tiendas
+  private apiUrl = 'http://localhost:5257/api/TiendasControladores';
 
   // Datos simulados para demostración
   private tiendas: Tienda[] = [
@@ -38,8 +38,7 @@ export class TiendaService {
    * @returns {Observable<Tienda[]>} Un Observable que emite un array de Tienda.
    */
   getTiendas(): Observable<Tienda[]> {
-    // En un entorno real: return this.http.get<Tienda[]>(this.apiUrl);
-    return of(this.tiendas);
+    return this.http.get<Tienda[]>(this.apiUrl);
   }
 
   /**
