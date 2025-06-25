@@ -178,22 +178,27 @@ export class AppComponent implements OnInit {
 
   // Nuevo método: Cargar todas las tiendas
   loadTiendas(): void {
-    this.tiendaService.getTiendas().subscribe(
-      (data: Tienda[]) => {
-        this.tiendas = data;
-      },
-      (error: any) => {
-        console.error('Error al cargar tiendas:', error);
-      }
-    );
-  }
+  this.tiendaService.getTiendas().subscribe(
+    (data: Tienda[]) => {
+      this.tiendas = data;
+      console.log('Tiendas cargadas:', this.tiendas);
+    },
+    (error: any) => {
+      console.error('Error al cargar tiendas:', error);
+    }
+  );
+}
 
   // Nuevo método: Ver productos de una tienda específica
-  viewStoreProducts(store: Tienda): void {
-    this.selectedStore = store;
+
+  viewStoreProducts(tienda: Tienda): void {
+    this.selectedStore = tienda;
     // Filtra los productos que pertenecen a esta tienda por su VendedorID
-    this.storeProducts = this.products.filter(p => p.vendedorID === store.VendedorID);
-    this.currentActiveLink = 'StoreDetail'; // Nuevo estado para la vista de detalles de tienda
+     this.storeProducts = this.products.filter(
+    product => product.vendedorID === tienda.vendedorID
+  );
+  console.log('Productos filtrados:', this.storeProducts);
+  this.currentActiveLink = 'StoreDetail'; // Nuevo estado para la vista de detalles de tienda
     this.showShoppingCartMenu = false;
     this.showSellMenu = false;
     this.showProductDetailMenu = false;
@@ -203,7 +208,7 @@ export class AppComponent implements OnInit {
     this.showConvertToSellerMenu = false; // Asegurarse de ocultar el menú de conversión
     this.showOrderHistoryMenu = false; // Asegurarse de ocultar el historial de pedidos
     this.showProductsMenu = false; // Ocultar el menú general de productos
-    console.log('Viendo productos de la tienda:', store.NombreDeTienda);
+    console.log('Viendo productos de la tienda:', tienda.nombreDeTienda);
   }
 
   // Nuevo método: Volver a la lista de tiendas
@@ -345,7 +350,7 @@ export class AppComponent implements OnInit {
       return;
     }
 
-    const sellerId = (this.loggedInUser as Tienda).VendedorID;
+    const sellerId = (this.loggedInUser as Tienda).vendedorID;
 
     if (sellerId === undefined) {
       alert('No se pudo determinar el ID del vendedor para subir el producto.');
@@ -456,7 +461,7 @@ this.http.post<any>('http://localhost:5257/api/UsuariosControlador/login', {
           // Si es vendedor, carga productos en venta
           if (this.loggedInUser.userType === 'Vendedor') {
             this.productoService.getProductos().subscribe(allProducts => {
-              this.sellingProducts = allProducts.filter(p => p.vendedorID === this.loggedInUser!.VendedorID);
+              this.sellingProducts = allProducts.filter(p => p.vendedorID === this.loggedInUser!.vendedorID);
             });
           }
 
@@ -606,8 +611,8 @@ resetRegistrationForm(): void {
       (existingTienda: Tienda | undefined) => {
         const tiendaData: Tienda = {
           ...user as Usuario, // Copia las propiedades de Usuario
-          VendedorID: user.UsuarioID, // El ClienteID del usuario es el VendedorID
-          NombreDeTienda: this.convertToSellerNombreTienda,
+          vendedorID: user.UsuarioID, // El ClienteID del usuario es el VendedorID
+          nombreDeTienda: this.convertToSellerNombreTienda,
           CuentaDeBanco: this.convertToSellerCuentaBanco,
           Activo: true,
           FechaDeRegistro: user.FechaDeRegistro // Mantener la fecha de registro original del usuario
@@ -654,7 +659,7 @@ resetRegistrationForm(): void {
 
     // Recargar productos de venta para el nuevo vendedor
     this.productoService.getProductos().subscribe(allProducts => {
-      this.sellingProducts = allProducts.filter(p => p.vendedorID === this.loggedInUser!.VendedorID);
+      this.sellingProducts = allProducts.filter(p => p.vendedorID === this.loggedInUser!.vendedorID);
     });
 
     alert('¡Felicidades! Tu cuenta ha sido convertida a vendedor exitosamente.');
@@ -662,7 +667,6 @@ resetRegistrationForm(): void {
     this.convertToSellerCuentaBanco = '';
     this.setActiveLink('Vender'); // Redirige al formulario de subir producto
   }
-
   // Métodos para el historial de pedidos
   viewOrderHistory(): void {
     if (this.loggedInUser && this.loggedInUser.userType === 'Cliente') {

@@ -29,9 +29,8 @@ export class TiendaService {
    * @returns {Observable<Tienda[]>} Un Observable que emite un array de Tienda.
    */
   getTiendas(): Observable<Tienda[]> {
-    // En un entorno real: return this.http.get<Tienda[]>(this.apiUrl);
-    return of(this.tiendas);
-  }
+  return this.http.get<Tienda[]>('http://localhost:5257/api/TiendasControladores');
+}
 
   /**
    * @method getTiendaById
@@ -41,7 +40,7 @@ export class TiendaService {
    */
   getTiendaById(id: number): Observable<Tienda | undefined> {
     // En un entorno real: return this.http.get<Tienda>(`${this.apiUrl}/${id}`);
-    return of(this.tiendas.find(t => t.VendedorID === id));
+    return of(this.tiendas.find(t => t.vendedorID === id));
   }
 
   /**
@@ -52,7 +51,7 @@ export class TiendaService {
    */
   addTienda(tienda: Tienda): Observable<Tienda> {
     // En un entorno real: return this.http.post<Tienda>(this.apiUrl, tienda);
-    const newId = this.tiendas.length > 0 ? Math.max(...this.tiendas.map(t => t.VendedorID)) + 1 : 1;
+    const newId = this.tiendas.length > 0 ? Math.max(...this.tiendas.map(t => t.vendedorID)) + 1 : 1;
     const newTienda = { ...tienda, VendedorID: newId, UsuarioID: newId }; // Simula UsuarioID también
     this.tiendas.push(newTienda);
     return of(newTienda);
@@ -66,7 +65,7 @@ export class TiendaService {
    */
   updateTienda(tienda: Tienda): Observable<any> {
     // En un entorno real: return this.http.put(`${this.apiUrl}/${tienda.VendedorID}`, tienda);
-    const index = this.tiendas.findIndex(t => t.VendedorID === tienda.VendedorID);
+    const index = this.tiendas.findIndex(t => t.vendedorID === tienda.vendedorID);
     if (index > -1) {
       this.tiendas[index] = tienda;
       return of(tienda);
@@ -82,7 +81,7 @@ export class TiendaService {
    */
   deleteTienda(id: number): Observable<any> {
     // En un entorno real: return this.http.delete(`${this.apiUrl}/${id}`);
-    this.tiendas = this.tiendas.filter(t => t.VendedorID !== id);
+    this.tiendas = this.tiendas.filter(t => t.vendedorID !== id);
     return of(null);
   }
 }
