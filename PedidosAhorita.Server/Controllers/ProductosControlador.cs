@@ -24,7 +24,7 @@ namespace PedidosAhorita.Server.Controllers
             _productoRepositorySQL = AlmacenDeDependecias.ProductoTabla;
             // Obtiene el repositorio de MongoDB desde AlmacenDeDependecias.Mongo
             // "productos" es el nombre de la colección en MongoDB donde se guardarán los detalles adicionales.
-            _productoMongoRepository = AlmacenDeDependecias.Mongo.GetRepository<ProductoDetalleMongo>("productos"); 
+            _productoMongoRepository = AlmacenDeDependecias.Mongo.GetRepository<ProductoDetalleMongo>("Productos"); 
         }
 
         // GET: api/Productos
@@ -42,7 +42,14 @@ namespace PedidosAhorita.Server.Controllers
                 {
                     // Intenta buscar los detalles adicionales de este producto en MongoDB usando su ProductoID
                     var prodMongo = _productoMongoRepository.FilterBy(p => p.ProductoID == prodSQL.ProductoID).FirstOrDefault();
-
+                    if (prodMongo != null)
+                    {
+                        Console.WriteLine($"Coincidencia encontrada: ProductoID {prodSQL.ProductoID} tiene detalles en MongoDB (Imagen: {prodMongo.Imagen}, Descripcion: {prodMongo.Descripcion})");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Sin coincidencia en MongoDB para ProductoID {prodSQL.ProductoID}");
+                    }
                     // Crea un nuevo objeto Producto que combine los campos de SQL Server y los de MongoDB
                     productosCombinados.Add(new Producto
                     {
