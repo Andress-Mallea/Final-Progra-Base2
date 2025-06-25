@@ -12,7 +12,7 @@ import { Cliente } from '../models/cliente.model';
   providedIn: 'root'
 })
 export class ClienteService {
-  private apiUrl = 'api/clientes'; // URL de ejemplo para la API de clientes
+  private apiUrl = 'http://localhost:5257/api/ClientesControlador'; // URL de ejemplo para la API de clientes
 
   // Datos simulados para demostración
   private clientes: Cliente[] = [

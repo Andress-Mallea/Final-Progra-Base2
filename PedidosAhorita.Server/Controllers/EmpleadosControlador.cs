@@ -45,9 +45,9 @@ namespace PedidosAhorita.Server.Controllers
             }
             try
             {
-                // Similar a Clientes/Vendedores, EmpleadoID debe ser un UsuarioID existente.
                 _empleadoRepository.Add(empleado);
-                return CreatedAtAction(nameof(GetEmpleado), new { id = empleado.EmpleadoID }, empleado);
+                // No necesitas CreatedAtAction si solo estás añadiendo un empleado sin un GET posterior por ID del empleado
+                return StatusCode(201, empleado); // Retorna 201 Created y el objeto empleado
             }
             catch (Exception ex)
             {

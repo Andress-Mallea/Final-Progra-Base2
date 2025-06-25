@@ -45,20 +45,28 @@ namespace PedidosAhorita.Server.Controllers
         [HttpPost]
         public ActionResult<Usuarios> PostUsuario(Usuarios usuario)
         {
-            // Validaciones básicas (puedes añadir más si es necesario)
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState); // Retorna 400 Bad Request si el modelo es inválido
+                return BadRequest(ModelState);
             }
-
-            _usuarioRepository.Add(usuario); // Operación síncrona
-
-            // Si UsuarioID es una columna IDENTITY en tu DB y no se asignó en el Add,
-            // no lo tendrás aquí automáticamente. En un escenario real, necesitarías
-            // una forma de recuperar el ID generado (ej. modificando Add para que devuelva el ID).
-            // Para fines de esta demostración, asumimos que el ID ya está en el objeto
-            // o que no lo necesitas para el CreatedAtAction.
-            return CreatedAtAction(nameof(GetUsuario), new { id = usuario.UsuarioID }, usuario);
+            try
+            {
+                if (usuario.FechaDeRegistro < new DateTime(1753, 1, 1)|| usuario.FechaDeRegistro == null)
+                {
+                    // Asegúrate de que la fecha de registro sea válida
+                    Console.WriteLine("Fecha de registro inválida, estableciendo a la fecha actual.");
+                    usuario.FechaDeRegistro = DateTime.Now;
+                }
+                Console.WriteLine($"Creando usuario: {usuario.UsuarioID}, {usuario.Nombre}, {usuario.Email}");
+                _usuarioRepository.Add(usuario);
+                // No necesitas CreatedAtAction si solo estás añadiendo un usuario sin un GET posterior por ID del usuario
+                return StatusCode(201, usuario); // Retorna 201 Created y el objeto usuario
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al crear usuario: {ex.Message}");
+                return StatusCode(500, $"Error al crear usuario: {ex.Message}");
+            }
         }
 
         // PUT: api/Usuarios/5

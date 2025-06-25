@@ -9,15 +9,17 @@ var builder = WebApplication.CreateBuilder(args);
 // Configuración de CORS
 builder.Services.AddCors(options =>
 {
-    options.AddDefaultPolicy(
-        policy =>
+    // Opcional: Para desarrollo, si no sabes el puerto exacto o este cambia frecuentemente:
+    // Puedes permitir CUALQUIER origen. **NO RECOMENDADO PARA PRODUCCIÓN.**
+    
+    options.AddPolicy("AllowAll",
+        builder =>
         {
-            // Permite solicitudes desde tu frontend (ajusta el puerto si es diferente)
-            // Para desarrollo, podrías usar .AllowAnyOrigin() pero NO en producción.
-            policy.WithOrigins("http://localhost:3000", "http://localhost:4200", "http://localhost:8080") // Ejemplos de puertos comunes de frontend
-                  .AllowAnyHeader()
-                  .AllowAnyMethod();
+            builder.AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
         });
+    
 });
 
 // Add services to the container.
@@ -54,7 +56,11 @@ else
     // Opcional: También puedes añadir un HSTS si estás usando HTTPS y no quieres que los navegadores accedan por HTTP
     // app.UseHsts();
 }
-
+app.UseCors(policy =>
+    policy.WithOrigins("https://localhost:49902")
+          .AllowAnyHeader()
+          .AllowAnyMethod()
+);
 app.UseHttpsRedirection();
 
 // >> MOVER app.UseRouting() AQUÍ <<
