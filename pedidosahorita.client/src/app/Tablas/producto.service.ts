@@ -48,6 +48,9 @@ export class ProductoService {
    * @param {Producto} producto - El producto a agregar.
    * @returns {Observable<Producto>} Un Observable que emite el producto agregado.
    */
+  getProductsByVendedorId(vendedorId: number): Observable<Producto[]> {
+    return this.http.get<Producto[]>(`${this.apiUrl}/ByVendedor/${vendedorId}`);
+  }
   addProducto(producto: Producto): Observable<Producto> {
     return this.http.post<Producto>(this.apiUrl, producto);
   }

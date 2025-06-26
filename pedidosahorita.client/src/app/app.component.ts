@@ -361,7 +361,7 @@ export class AppComponent implements OnInit {
       productoID: 0, // El ID será asignado por el backend
       nombre: this.newProductName,
       descripcion: this.newProductDescription,
-      precio: this.newProductPrice,
+      precio: this.newProductPrice ?? 0,
       imagen: this.newProductImage,
       vendedorID: sellerId,
       cantidad: 1, // O el campo que corresponda en tu modelo
@@ -561,48 +561,39 @@ resetRegistrationForm(): void {
 
   // Nuevo método para que un cliente convierta su cuenta a vendedor
   convertAccountToSeller(): void {
-    if (!this.loggedInUser || this.loggedInUser.userType !== 'Cliente') {
-      alert('Esta opción solo está disponible para clientes.');
-      return;
-    }
+  if (!this.loggedInUser || this.loggedInUser.userType !== 'Cliente') {
+    alert('Esta opción solo está disponible para clientes.');
+    return;
+  }
+  if (!this.convertToSellerNombreTienda) {
+    alert('Por favor, ingresa el nombre de tu tienda.');
+    return;
+  }
 
-    if (!this.convertToSellerNombreTienda) {
-      alert('Por favor, ingresa el nombre de tu tienda.');
-      return;
-    }
+  // Prepara el DTO para el backend
 
-    // Obtener el RolID de 'Vendedor'
-    this.rolDeUsuarioService.getRolesDeUsuario().subscribe(roles => {
-      const vendedorRol = roles.find(r => r.NombreRol === 'Vendedor');
-      if (vendedorRol) {
-        // Verificar si el UsuarioRol ya existe para evitar duplicados
-        this.usuarioRolService.getUsuarioRolByIds(this.loggedInUser!.UsuarioID, vendedorRol.RolID).subscribe(existingUserRol => {
-          if (existingUserRol) {
-            console.log('El usuario ya tiene el rol de Vendedor.');
-            // Si ya tiene el rol, simplemente actualizar su información de Tienda si es necesario o continuar
-            this.updateOrCreateTiendaForConversion(this.loggedInUser!, vendedorRol.RolID);
-          } else {
-            // Asignar el rol de vendedor al usuario existente
-            const newUsuarioRol: UsuarioRol = {
-              UsuarioID: this.loggedInUser!.UsuarioID,
-              RolID: vendedorRol.RolID
-            };
-            this.usuarioRolService.addUsuarioRol(newUsuarioRol).subscribe(
-              () => {
-                console.log('Rol de Vendedor asignado al usuario:', this.loggedInUser!.Email);
-                this.updateOrCreateTiendaForConversion(this.loggedInUser!, vendedorRol.RolID);
-              },
-              (error: any) => {
-                console.error('Error al asignar rol de vendedor:', error);
-                alert('Error al convertir la cuenta a vendedor: no se pudo asignar el rol.');
-              }
-            );
-          }
-        });
-      } else {
-        alert('El rol "Vendedor" no se encontró en la configuración del sistema.');
+  console.log('UsuarioID que se enviará:', this.loggedInUser?.UsuarioID);
+  const dto = {
+    usuarioID: this.loggedInUser.UsuarioID,
+    nombreDeTienda: this.convertToSellerNombreTienda,
+    cuentaDeBanco: this.convertToSellerCuentaBanco,
+    // Si necesitas enviar el ID del rol de vendedor, agrégalo aquí
+    // rolVendedorID: ...
+  };
+  console.log('DTO que se enviará:', dto);
+  this.http.post('http://localhost:5257/api/UsuariosControlador/convertir-a-vendedor', dto)
+    .subscribe(
+      (response: any) => {
+        alert('¡Tu cuenta ha sido convertida a vendedor exitosamente!');
+        // Opcional: Actualiza el estado del usuario en el frontend
+        this.loggedInUser!.userType = 'Vendedor';
+        this.setActiveLink('Vender');
+      },
+      (error: any) => {
+        console.error('Error al convertir a vendedor:', error);
+        alert('Error al convertir la cuenta a vendedor.');
       }
-    });
+    );
   }
 
   private updateOrCreateTiendaForConversion(user: LoggedInUser, vendedorRolId: number): void {
@@ -765,5 +756,47 @@ resetRegistrationForm(): void {
     this.selectedOrder = null; // Limpiar pedido seleccionado
     alert('Has cerrado sesión.');
     this.setActiveLink('Inicio');
+  }
+  // Supón que tienes un formulario para capturar estos datos
+agregarProducto(): void {
+  console.log('Usuario logueado:', this.loggedInUser);
+  if (!this.loggedInUser) {
+
+    return;
+  }
+
+  const dto = {
+      Nombre: this.newProductName,
+      Precio: this.newProductPrice ?? 0,
+      VendedorID: this.loggedInUser.UsuarioID,
+      Cantidad: 1, // o el valor que corresponda
+      StockDisponible: 1, // o el valor que corresponda
+      Descripcion: this.newProductDescription,
+      Imagen: this.newProductImage
+    };
+    console.log('DTO que se enviará:', dto);
+  this.http.post('http://localhost:5257/api/ProductosControlador/agregar', dto)
+    .subscribe(
+      (response: any) => {
+        alert('¡Producto agregado correctamente!');
+        // Opcional: recarga la lista de productos
+      },
+      (error: any) => {
+        alert('Error al agregar producto');
+        console.error(error);
+      }
+    );
+}
+  cargarProductosDelVendedor(vendedorId: number): void {
+    this.productoService.getProductsByVendedorId(vendedorId).subscribe(
+      (productos: Producto[]) => {
+        this.sellingProducts = productos;
+        console.log('Productos del vendedor cargados:', this.sellingProducts);
+      },
+      (error: any) => {
+        console.error('Error al cargar productos del vendedor:', error);
+        this.sellingProducts = []; // Limpiar si hay un error
+      }
+    );
   }
 }
