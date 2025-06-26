@@ -334,8 +334,8 @@ export class AppComponent implements OnInit {
       return;
     }
 
-    const sellerId = (this.loggedInUser as Tienda).vendedorID;
-
+    const sellerId = (this.loggedInUser as Tienda).UsuarioID;
+    console.log('ID del vendedor:', sellerId);
     if (sellerId === undefined) {
       alert('No se pudo determinar el ID del vendedor para subir el producto.');
       return;

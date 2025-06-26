@@ -33,7 +33,7 @@ namespace PedidosAhorita.Server.Controllers
             try
             {
                 var productosSQL = _productoRepositorySQL.GetAll();
-                var productosCombinados = new List<Producto>();
+                var productosCombinados = new List<RegistroProducto>();
                 foreach (var prodSQL in productosSQL)
                 {
                     var prodMongo = _productoMongoRepository.FilterBy(p => p.ProductoID == prodSQL.ProductoID).FirstOrDefault();
@@ -45,16 +45,15 @@ namespace PedidosAhorita.Server.Controllers
                     {
                         Console.WriteLine($"Sin coincidencia en MongoDB para ProductoID {prodSQL.ProductoID}");
                     }
-                    productosCombinados.Add(new Producto
+                    productosCombinados.Add(new RegistroProducto
                     {
                         ProductoID = prodSQL.ProductoID,
                         VendedorID = prodSQL.VendedorID,
                         Nombre = prodSQL.Nombre,
                         Precio = prodSQL.Precio,
-                        Cantidad = prodSQL.Cantidad,
                         StockDisponible = prodSQL.StockDisponible,
-                        Activo = prodSQL.Activo,
-                        FechaCreacion = prodSQL.FechaCreacion,
+                        Activo = true,
+                        FechaCreacion = DateTime.Now, // Asignar la fecha actual
                         Descripcion = prodMongo?.Descripcion,
                         Imagen = prodMongo?.Imagen
                     });
@@ -84,16 +83,16 @@ namespace PedidosAhorita.Server.Controllers
 
                 var prodMongo = _productoMongoRepository.FilterBy(p => p.ProductoID == productoSQL.ProductoID).FirstOrDefault();
 
-                Producto productoCombinado = new Producto
+                RegistroProducto productoCombinado = new RegistroProducto
                 {
                     ProductoID = productoSQL.ProductoID,
                     VendedorID = productoSQL.VendedorID,
                     Nombre = productoSQL.Nombre,
                     Precio = productoSQL.Precio,
-                    Cantidad = productoSQL.Cantidad,
+                    Cantidad = productoSQL.StockDisponible,
                     StockDisponible = productoSQL.StockDisponible,
-                    Activo = productoSQL.Activo,
-                    FechaCreacion = productoSQL.FechaCreacion,
+                    Activo = true,
+                    FechaCreacion = DateTime.Now,
                     Descripcion = prodMongo?.Descripcion,
                     Imagen = prodMongo?.Imagen
                 };
@@ -111,7 +110,7 @@ namespace PedidosAhorita.Server.Controllers
         // POST: api/Productos
         // Añade un nuevo producto a SQL Server y sus detalles a MongoDB
         [HttpPost]
-        public ActionResult<Producto> PostProducto(Producto producto)
+        public ActionResult<Producto> PostProducto(RegistroProducto producto)
         {
             if (!ModelState.IsValid)
             {
@@ -147,7 +146,7 @@ namespace PedidosAhorita.Server.Controllers
         // PUT: api/Productos/101
         // Actualiza un producto en SQL Server y sus detalles en MongoDB
         [HttpPut("{id}")]
-        public IActionResult PutProducto(int id, Producto producto)
+        public IActionResult PutProducto(int id, RegistroProducto producto)
         {
             if (id != producto.ProductoID)
             {
@@ -169,7 +168,7 @@ namespace PedidosAhorita.Server.Controllers
                 {
                     existingProductMongo.Nombre = producto.Nombre;
                     existingProductMongo.Precio = (double)producto.Precio;
-                    existingProductMongo.Cantidad = producto.Cantidad;
+                    existingProductMongo.Cantidad = producto.StockDisponible;
                     existingProductMongo.Descripcion = producto.Descripcion;
                     existingProductMongo.Imagen = producto.Imagen;
                     _productoMongoRepository.ReplaceOne(existingProductMongo);
@@ -181,7 +180,7 @@ namespace PedidosAhorita.Server.Controllers
                         ProductoID = producto.ProductoID,
                         Nombre = producto.Nombre,
                         Precio = (double)producto.Precio,
-                        Cantidad = producto.Cantidad,
+                        Cantidad = producto.StockDisponible,
                         Descripcion = producto.Descripcion,
                         Imagen = producto.Imagen
                     });
