@@ -5,15 +5,15 @@ INSERT INTO Usuarios (Nombre, Apellido, Email, Telefono, ContrasenaHash) VALUES 
 INSERT INTO Usuarios (Nombre, Apellido, Email, Telefono, ContrasenaHash) VALUES (N'Petrona', N'Toledo', 'tmoran@mulet.es', '+34 720 453 317', 'c9dc41b20423605dfeb0e39eb46e546e37a997f5118220634d1fe65f95d14f53');
 INSERT INTO Usuarios (Nombre, Apellido, Email, Telefono, ContrasenaHash) VALUES (N'Daniela', N'Salamanca', 'leonardogallego@yahoo.com', '+34 728156885', 'f35ca143fdfb72d202a94a4b9809c657821351e5394928e486c651175f060383');
 INSERT INTO Usuarios (Nombre, Apellido, Email, Telefono, ContrasenaHash) VALUES (N'Pancho', N'Sureda', 'danizaguirre@hotmail.com', '+34 727 919 892', 'f1cc01a72bc50a60408b6a3a6111f113129206c471d5c5186de7c7538c939f16');
-INSERT INTO Usuarios (Nombre, Apellido, Email, Telefono, ContrasenaHash) VALUES (N'Bernabé', N'Peral', 'chaparroeli@macias.es', '+34730682427', '7da7bd9fae659a1437fda36a876a8b9326763728b47949bf88247a02dc538368');
+INSERT INTO Usuarios (Nombre, Apellido, Email, Telefono, ContrasenaHash) VALUES (N'Bernabï¿½', N'Peral', 'chaparroeli@macias.es', '+34730682427', '7da7bd9fae659a1437fda36a876a8b9326763728b47949bf88247a02dc538368');
 INSERT INTO Usuarios (Nombre, Apellido, Email, Telefono, ContrasenaHash) VALUES (N'Olimpia', N'Roura', 'prietoherberto@melero.com', '+34 749367514', 'e87d0a060b22c8680d96f13e368bd973a1dfe197c4185b1f83f6542057873fc7');
 INSERT INTO Usuarios (Nombre, Apellido, Email, Telefono, ContrasenaHash) VALUES (N'Diana', N'Fuertes', 'maximino99@gascon.net', '+34 998 880 467', 'b254dbc506c3ce3c7951df381eaf35a6edfa7bef8b39f1f68a67bf5bad5e72a3');
-INSERT INTO Usuarios (Nombre, Apellido, Email, Telefono, ContrasenaHash) VALUES (N'Francisco Javier', N'Alcalá', 'rosalia98@hotmail.com', '+34650 584 825', '9f45235f56d588f4cb876ef1329cc4973e0e420dfaf19c690056a283a9d0448d');
+INSERT INTO Usuarios (Nombre, Apellido, Email, Telefono, ContrasenaHash) VALUES (N'Francisco Javier', N'Alcalï¿½', 'rosalia98@hotmail.com', '+34650 584 825', '9f45235f56d588f4cb876ef1329cc4973e0e420dfaf19c690056a283a9d0448d');
 INSERT INTO Usuarios (Nombre, Apellido, Email, Telefono, ContrasenaHash) VALUES (N'Sancho', N'Rojas', 'marciocastro@borras-mendez.org', '+34 624043223', '24b27684f186277ccc29190c1c29f7dd4538f6b57a087e442199e2eee90e7c24');
-INSERT INTO Usuarios (Nombre, Apellido, Email, Telefono, ContrasenaHash) VALUES (N'Eva', N'Garzón', 'abadmarco@hotmail.com', '+34848 06 11 77', '03366bd3203fd76a80e6597f7575562ceaccc019014d2b9f5605d4095583a2db');
+INSERT INTO Usuarios (Nombre, Apellido, Email, Telefono, ContrasenaHash) VALUES (N'Eva', N'Garzï¿½n', 'abadmarco@hotmail.com', '+34848 06 11 77', '03366bd3203fd76a80e6597f7575562ceaccc019014d2b9f5605d4095583a2db');
 INSERT INTO Usuarios (Nombre, Apellido, Email, Telefono, ContrasenaHash) VALUES (N'Pepito', N'Izquierdo', 'aliagaagata@riquelme-cisneros.es', '+34 680 779 445', '808f62602e2b83e93cbfe58f68d5c6d3f5a15cb1e7ecc6c9d81a747ed135d140');
 INSERT INTO Usuarios (Nombre, Apellido, Email, Telefono, ContrasenaHash) VALUES (N'Adela', N'Gomis', 'nicodemo24@gmail.com', '+34738 09 41 69', 'e14139645bc76ab9a468e992b0d37f6c8f97d7c0575c1f73c72051418f830b9d');
-INSERT INTO Usuarios (Nombre, Apellido, Email, Telefono, ContrasenaHash) VALUES (N'María Pilar', N'Galan', 'adelaida31@gmail.com', '+34700 07 14 13', '0e8fe...');
+INSERT INTO Usuarios (Nombre, Apellido, Email, Telefono, ContrasenaHash) VALUES (N'Marï¿½a Pilar', N'Galan', 'adelaida31@gmail.com', '+34700 07 14 13', '0e8fe...');
 
 -- Insertar Roles
 INSERT INTO RolesDeUsuario (NombreRol) VALUES (N'Cliente');
@@ -33,11 +33,11 @@ INSERT INTO Vendedores (VendedorID, NombreDeTienda, CuentaDeBanco, Activo) VALUE
 (7, N'Tienda Luna Nueva', 'ES1000491500052710149031', 1),
 (8, N'Market Express', 'ES1600491500052710149032', 1),
 (9, N'Venta y Punto', 'ES1200491500052710149033', 1),
-(10, N'Mercado Rápido', 'ES1400491500052710149034', 1);
+(10, N'Mercado Rï¿½pido', 'ES1400491500052710149034', 1);
 INSERT INTO Empleados (EmpleadoID, FechaDeContratacion, FechaDeDespido, RolInterno, Salario) VALUES
-(11, '2022-01-15', NULL, N'Atención al Cliente', 1800.00),
+(11, '2022-01-15', NULL, N'Atenciï¿½n al Cliente', 1800.00),
 (12, '2023-03-10', NULL, N'Repartidor', 1500.00),
-(13, '2021-06-01', NULL, N'Soporte Técnico', 2000.00),
+(13, '2021-06-01', NULL, N'Soporte Tï¿½cnico', 2000.00),
 (14, '2020-09-20', NULL, N'Administrador', 2500.00);
 --Roles
 -- Clientes (UsuarioID 1 al 5)
@@ -62,12 +62,12 @@ INSERT INTO UsuarioRoles (UsuarioID, RolID) VALUES
 (12, 3),
 (13, 3),
 (14, 3);
--- Categorías
-INSERT INTO CategoriasProducto (NombreCategoria) VALUES (N'Categoría 1');
-INSERT INTO CategoriasProducto (NombreCategoria) VALUES (N'Categoría 2');
-INSERT INTO CategoriasProducto (NombreCategoria) VALUES (N'Categoría 3');
-INSERT INTO CategoriasProducto (NombreCategoria) VALUES (N'Categoría 4');
-INSERT INTO CategoriasProducto (NombreCategoria) VALUES (N'Categoría 5');
+-- Categorï¿½as
+INSERT INTO CategoriasProducto (NombreCategoria) VALUES (N'Categorï¿½a 1');
+INSERT INTO CategoriasProducto (NombreCategoria) VALUES (N'Categorï¿½a 2');
+INSERT INTO CategoriasProducto (NombreCategoria) VALUES (N'Categorï¿½a 3');
+INSERT INTO CategoriasProducto (NombreCategoria) VALUES (N'Categorï¿½a 4');
+INSERT INTO CategoriasProducto (NombreCategoria) VALUES (N'Categorï¿½a 5');
 
 -- Estados de Pedido
 INSERT INTO EstadosPedido (NombreEstado) VALUES (N'Pendiente');
@@ -78,23 +78,23 @@ INSERT INTO EstadosPedido (NombreEstado) VALUES (N'Entregado');
 -- Productos (15)
 INSERT INTO Productos (VendedorID, CategoriaID, Nombre, Descripcion, Precio, StockDisponible, ImagenURL)
 VALUES 
-(6, 1, N'Producto 1', N'Descripción del producto 1', 45.00, 12, N'https://img/1.jpg'),
-(7, 2, N'Producto 2', N'Descripción del producto 2', 23.00, 26, N'https://img/2.jpg'),
-(10, 1, N'Producto 3', N'Descripción del producto 3', 85.00, 18, N'https://img/3.jpg'),
-(6, 1, N'Producto 4', N'Descripción del producto 4', 21.00, 11, N'https://img/4.jpg'),
-(7, 5, N'Producto 5', N'Descripción del producto 5', 87.00, 5, N'https://img/5.jpg'),
-(10, 2, N'Producto 6', N'Descripción del producto 6', 93.00, 27, N'https://img/6.jpg'),
-(10, 4, N'Producto 7', N'Descripción del producto 7', 38.00, 19, N'https://img/7.jpg'),
-(10, 3, N'Producto 8', N'Descripción del producto 8', 10.00, 29, N'https://img/8.jpg'),
-(7, 4, N'Producto 9', N'Descripción del producto 9', 53.00, 13, N'https://img/9.jpg'),
-(7, 2, N'Producto 10', N'Descripción del producto 10', 53.00, 8, N'https://img/10.jpg'),
-(6, 4, N'Producto 11', N'Descripción del producto 11', 22.00, 16, N'https://img/11.jpg'),
-(8, 5, N'Producto 12', N'Descripción del producto 12', 43.00, 30, N'https://img/12.jpg'),
-(8, 2, N'Producto 13', N'Descripción del producto 13', 54.00, 22, N'https://img/13.jpg'),
-(9, 2, N'Producto 14', N'Descripción del producto 14', 95.00, 20, N'https://img/14.jpg'),
-(7, 5, N'Producto 15', N'Descripción del producto 15', 94.00, 13, N'https://img/15.jpg');
+(6, 1, N'Arroz 5kg', N'Descripciï¿½n del producto 1', 45.00, 12, N'https://img/1.jpg'),
+(7, 2, N'Fideos 1kg', N'Descripciï¿½n del producto 2', 23.00, 26, N'https://img/2.jpg'),
+(10, 1, N'Aceite 1L', N'Descripciï¿½n del producto 3', 85.00, 18, N'https://img/3.jpg'),
+(6, 1, N'AzÃºcar 2kg', N'Descripciï¿½n del producto 4', 21.00, 11, N'https://img/4.jpg'),
+(7, 5, N'Sal 1kg', N'Descripciï¿½n del producto 5', 87.00, 5, N'https://img/5.jpg'),
+(10, 2, N'CafÃ© 250g', N'Descripciï¿½n del producto 6', 93.00, 27, N'https://img/6.jpg'),
+(10, 4, N'Galletas 500g', N'Descripciï¿½n del producto 7', 38.00, 19, N'https://img/7.jpg'),
+(10, 3, N'Huevos docena', N'Descripciï¿½n del producto 8', 10.00, 29, N'https://img/8.jpg'),
+(7, 4, N'Jugo 1L', N'Descripciï¿½n del producto 9', 53.00, 13, N'https://img/9.jpg'),
+(7, 2, N'Pan integral', N'Descripciï¿½n del producto 10', 53.00, 8, N'https://img/10.jpg'),
+(6, 4, N'Leche 1L', N'Descripciï¿½n del producto 11', 22.00, 16, N'https://img/11.jpg'),
+(8, 5, N'Cereal 300g', N'Descripciï¿½n del producto 12', 43.00, 30, N'https://img/12.jpg'),
+(8, 2, N'Mermelada 500g', N'Descripciï¿½n del producto 13', 54.00, 22, N'https://img/13.jpg'),
+(9, 2, N'Mantequilla 200g', N'Descripciï¿½n del producto 14', 95.00, 20, N'https://img/14.jpg'),
+(7, 5, N'Yogurt 1L', N'Descripciï¿½n del producto 15', 94.00, 13, N'https://img/15.jpg');
 
--- Pedidos (ClienteID: 1–5, RepartidorID: NULL o 11–15)
+-- Pedidos (ClienteID: 1ï¿½5, RepartidorID: NULL o 11ï¿½15)
 INSERT INTO Pedidos (ClienteID, EstadoDelPedidoID, RepartidorID, Total, TipoEntrega)
 VALUES
 (5, 4, 12, 50.22, N'Pickup'),

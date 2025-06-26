@@ -1,0 +1,138 @@
+Se usó un 81% del almacenamiento … Si te quedas sin almacenamiento, no podrás crear, editar ni subir archivos. Obtén 30 GB de almacenamiento por Bs 7,00 Bs 2,00 al mes durante 3 meses.
+db.Productos.insertMany([
+  {
+    "ProductoID": 1,
+    "VendedorID": 11,
+    "Nombre": "Arroz 5kg",
+    "Precio": 45.00,
+    "Cantidad": 100,
+    "descripcion": "Arroz blanco de grano largo, ideal para acompañar tus comidas.",
+    "imagen": "https://www.pequerecetas.com/wp-content/uploads/2014/01/arroz-blanco-receta-facil.jpg"
+  },
+  {
+    "ProductoID": 2,
+    "VendedorID": 11,
+    "Nombre": "Fideos 1kg",
+    "Precio": 10.00,
+    "Cantidad": 150,
+    "descripcion": "Fideos tipo espagueti, perfectos para pastas.",
+    "imagen": "https://img-global.cpcdn.com/recipes/aa94c5e6aac8e9df/1200x630cq90/photo.jpg"
+  },
+  {
+    "ProductoID": 3,
+    "VendedorID": 12,
+    "Nombre": "Aceite 1L",
+    "Precio": 20.00,
+    "Cantidad": 80,
+    "descripcion": "Aceite vegetal de cocina, para freír y aderezar.",
+    "imagen": "https://icnorteb2c.vteximg.com.br/arquivos/ids/156973-600-600/Aceite-Fino-Vegetal-900-Ml-1-946.jpg"
+  },
+  {
+    "ProductoID": 4,
+    "VendedorID": 12,
+    "Nombre": "Azúcar 2kg",
+    "Precio": 15.00,
+    "Cantidad": 60,
+    "descripcion": "Azúcar granulada, para endulzar tus bebidas y postres.",
+    "imagen": "https://empresasiansa.cl/wp-content/uploads/2020/02/azucar.jpg"
+  },
+  {
+    "ProductoID": 5,
+    "VendedorID": 13,
+    "Nombre": "Sal 1kg",
+    "Precio": 8.00,
+    "Cantidad": 200,
+    "descripcion": "Sal de mesa fina, esencial para realzar el sabor de tus comidas.",
+    "imagen": "https://www.iidenut.org/instituto/wp-content/uploads/2022/02/76-sal.jpg"
+  },
+  {
+    "ProductoID": 6,
+    "VendedorID": 13,
+    "Nombre": "Café 250g",
+    "Precio": 35.00,
+    "Cantidad": 90,
+    "descripcion": "Café molido de alta calidad, ideal para un buen desayuno.",
+    "imagen": ""
+  },
+  {
+    "ProductoID": 7,
+    "VendedorID": 14,
+    "Nombre": "Galletas 500g",
+    "Precio": 25.00,
+    "Cantidad": 70,
+    "descripcion": "Galletas dulces variadas, perfectas para la merienda.",
+    "imagen": ""
+  },
+  {
+    "ProductoID": 8,
+    "VendedorID": 14,
+    "Nombre": "Jugo 1L",
+    "Precio": 12.00,
+    "Cantidad": 100,
+    "descripcion": "Jugo de frutas natural, refrescante y nutritivo.",
+    "imagen": ""
+  },
+  {
+    "ProductoID": 9,
+    "VendedorID": 15,
+    "Nombre": "Pan integral",
+    "Precio": 18.00,
+    "Cantidad": 120,
+    "descripcion": "Pan integral fresco, ideal para una dieta balanceada.",
+    "imagen": ""
+  },
+  {
+    "ProductoID": 10,
+    "VendedorID": 15,
+    "Nombre": "Leche 1L",
+    "Precio": 9.00,
+    "Cantidad": 130,
+    "descripcion": "Leche entera UHT, fuente de calcio y proteínas.",
+    "imagen": ""
+  },
+  {
+    "ProductoID": 11,
+    "VendedorID": 11,
+    "Nombre": "Cereal 300g",
+    "Precio": 22.00,
+    "Cantidad": 110,
+    "descripcion": "Cereal de desayuno con frutas, para empezar el día con energía.",
+    "imagen": ""
+  },
+  {
+    "ProductoID": 12,
+    "VendedorID": 12,
+    "Nombre": "Mermelada 500g",
+    "Precio": 30.00,
+    "Cantidad": 75,
+    "descripcion": "Mermelada de fresa artesanal, deliciosa para tostadas.",
+    "imagen": ""
+  },
+  {
+    "ProductoID": 13,
+    "VendedorID": 13,
+    "Nombre": "Mantequilla 200g",
+    "Precio": 28.00,
+    "Cantidad": 95,
+    "descripcion": "Mantequilla sin sal, perfecta para cocinar y untar.",
+    "imagen": ""
+  },
+  {
+    "ProductoID": 14,
+    "VendedorID": 14,
+    "Nombre": "Yogurt 1L",
+    "Precio": 14.00,
+    "Cantidad": 105,
+    "descripcion": "Yogurt natural descremado, ideal para una merienda saludable.",
+    "imagen": ""
+  },
+  {
+    "ProductoID": 15,
+    "VendedorID": 15,
+    "Nombre": "Huevos docena",
+    "Precio": 16.00,
+    "Cantidad": 85,
+    "descripcion": "Huevos frescos de granja, básicos en cualquier cocina.",
+    "imagen": ""
+  }
+]);
