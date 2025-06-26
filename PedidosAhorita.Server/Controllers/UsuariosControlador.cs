@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using PedidosAhorita.Server.BaseDeDatosConeccion.SQL;
 using PedidosAhorita.Server.Tablas;
+using PedidosAhorita.Server.Tablas.SQLModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PedidosAhorita.Server.DTOs;
@@ -193,6 +194,68 @@ namespace PedidosAhorita.Server.Controllers
             }
         }
         // PUT: api/Usuarios/5
+        [HttpPost("convertir-a-vendedor")]
+        public IActionResult ConvertirAClienteAVendedor([FromBody] ConvertirAVendedorDto dto)
+        {
+            try
+            {
+                // 1. Verifica si el usuario ya tiene el rol de vendedor
+                var usuarioRol = AlmacenDeDependecias.UsuarioRolTabla.GetAll()
+                    .FirstOrDefault(ur => ur.UsuarioID == dto.UsuarioID && ur.RolID == dto.RolVendedorID);
+                
+                if (usuarioRol == null)
+                {
+                    Console.WriteLine($"Convertir a vendedor: UsuarioID={dto.UsuarioID}, RolVendedorID={dto.RolVendedorID}");
+                    if (dto.UsuarioID == 0 || dto.UsuarioID == null)
+                        return BadRequest("UsuarioID no puede ser 0.");
+                    // Asigna el rol de vendedor
+                    AlmacenDeDependecias.UsuarioRolTabla.Add(new UsuarioRol
+                    {
+                        UsuarioID = dto.UsuarioID,
+                        RolID = dto.RolVendedorID
+                    });
+                }
+
+                // 2. Verifica si ya existe una tienda para este usuario
+                var tiendaExistente = AlmacenDeDependecias.TiendasTabla.GetAll()
+                    .FirstOrDefault(t => t.VendedorID == dto.UsuarioID);
+
+                if (tiendaExistente != null)
+                {
+                    // Actualiza la tienda existente
+                    tiendaExistente.NombreDeTienda = dto.NombreDeTienda;
+                    tiendaExistente.CuentaDeBanco = dto.CuentaDeBanco;
+                    tiendaExistente.Activo = true;
+                    AlmacenDeDependecias.TiendasTabla.Update(tiendaExistente);
+                }
+                else
+                {
+                    // Crea una nueva tienda
+                    AlmacenDeDependecias.TiendasTabla.Add(new Tiendas
+                    {
+                        VendedorID = dto.UsuarioID,
+                        NombreDeTienda = dto.NombreDeTienda,
+                        CuentaDeBanco = dto.CuentaDeBanco,
+                        Activo = true
+                    });
+                }
+
+                return Ok(new { mensaje = "Cuenta convertida a vendedor exitosamente." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error al convertir a vendedor: {ex.Message}");
+            }
+        }
+
+// DTO para la conversión
+public class ConvertirAVendedorDto
+{
+    public int UsuarioID { get; set; }
+    public int RolVendedorID { get; set; }
+    public string NombreDeTienda { get; set; }
+    public string CuentaDeBanco { get; set; }
+}
         [HttpPut("{id}")]
         public IActionResult PutUsuario(int id, Usuarios usuario)
         {
