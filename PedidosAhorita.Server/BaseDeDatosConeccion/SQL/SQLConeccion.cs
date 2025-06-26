@@ -13,8 +13,11 @@ namespace PedidosAhorita.Server.BaseDeDatosConeccion.SQL
 
         public SQLConeccion(string connectionString)
         {
-            _connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
+        _connectionString = connectionString;
         }
+
+    // Agrega esta propiedad pública
+        public string ConnectionString => _connectionString;
 
         public int ExecuteNonQuery(string query, SqlParameter[] parameters = null)
         {
