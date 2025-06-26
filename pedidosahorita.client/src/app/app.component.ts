@@ -78,6 +78,7 @@ export class AppComponent implements OnInit {
   newProductDescription: string = '';
   newProductPrice: number | null = null;
   newProductImage: string = '';
+  newProductStock: number = 1;
 
   // Propiedades para el formulario de Login
   showLoginMenu: boolean = false;
@@ -342,13 +343,13 @@ export class AppComponent implements OnInit {
     }
 
     const newProduct: Producto = {
-      productoID: 0, // El ID será asignado por el backend
+      productoID: this.products.length + 1, // El ID será asignado por el backend
       nombre: this.newProductName,
       descripcion: this.newProductDescription,
       precio: this.newProductPrice,
       imagen: this.newProductImage,
       vendedorID: sellerId,
-      cantidad: 1, // O el campo que corresponda en tu modelo
+      cantidad: this.newProductStock, // O el campo que corresponda en tu modelo
       activo: true,
       fechaCreacion: new Date()
     };
@@ -410,7 +411,7 @@ export class AppComponent implements OnInit {
       alert('Debes iniciar sesión como cliente para realizar una compra.');
       return;
     }
-
+    
     const clienteID = this.loggedInUser.UsuarioID;
     const tipoEntrega = 'Domicilio'; // O puedes permitir que el usuario elija el tipo de entrega
 

@@ -118,7 +118,29 @@ namespace PedidosAhorita.Server.Controllers
             }
             try
             {
-                _productoRepositorySQL.Add(producto);
+                var connectionString = AlmacenDeDependecias.SQL.ConnectionString;
+                using (var connection = new SqlConnection(connectionString))
+                using (var command = new SqlCommand("AgregarOActualizarProducto", connection))
+                {
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@VendedorID", producto.VendedorID);
+                    command.Parameters.AddWithValue("@Nombre", producto.Nombre);
+                    command.Parameters.AddWithValue("@Precio", producto.Precio);
+                    command.Parameters.AddWithValue("@Cantidad", (int)producto.Cantidad);
+
+                    connection.Open();
+                    try
+                    {
+                        command.ExecuteNonQuery();
+                        Console.WriteLine($"Producto {producto.Nombre} agregado correctamente");
+                    }
+                    catch (SqlException ex)
+                    {
+                        // Si el procedimiento lanza RAISERROR, lo capturamos aquí
+                        Console.WriteLine($"SQL Error al subir producto: {ex.Message}");
+                        Console.WriteLine($"SQL StackTrace: {ex.StackTrace}");
+                    }
+                }
 
                 if (producto.Descripcion != null || producto.Imagen != null)
                 {
