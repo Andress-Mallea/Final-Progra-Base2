@@ -89,3 +89,9 @@ C:\Users\MSI LAPTOP\Desktop\ExamenFinal-Progra2\PedidosAhorita\PedidosAhorita.Se
 C:\Users\MSI LAPTOP\Desktop\ExamenFinal-Progra2\PedidosAhorita\PedidosAhorita.Server\obj\Debug\net8.0\PedidosAhorita.Server.pdb
 C:\Users\MSI LAPTOP\Desktop\ExamenFinal-Progra2\PedidosAhorita\PedidosAhorita.Server\obj\Debug\net8.0\PedidosAhorita.Server.genruntimeconfig.cache
 C:\Users\MSI LAPTOP\Desktop\ExamenFinal-Progra2\PedidosAhorita\PedidosAhorita.Server\obj\Debug\net8.0\ref\PedidosAhorita.Server.dll
+C:\Users\MSI LAPTOP\Desktop\ExamenFinal-Progra2\PedidosAhorita\PedidosAhorita.Server\bin\Debug\net8.0\System.Data.SqlClient.dll
+C:\Users\MSI LAPTOP\Desktop\ExamenFinal-Progra2\PedidosAhorita\PedidosAhorita.Server\bin\Debug\net8.0\runtimes\win-arm64\native\sni.dll
+C:\Users\MSI LAPTOP\Desktop\ExamenFinal-Progra2\PedidosAhorita\PedidosAhorita.Server\bin\Debug\net8.0\runtimes\win-x64\native\sni.dll
+C:\Users\MSI LAPTOP\Desktop\ExamenFinal-Progra2\PedidosAhorita\PedidosAhorita.Server\bin\Debug\net8.0\runtimes\win-x86\native\sni.dll
+C:\Users\MSI LAPTOP\Desktop\ExamenFinal-Progra2\PedidosAhorita\PedidosAhorita.Server\bin\Debug\net8.0\runtimes\unix\lib\net8.0\System.Data.SqlClient.dll
+C:\Users\MSI LAPTOP\Desktop\ExamenFinal-Progra2\PedidosAhorita\PedidosAhorita.Server\bin\Debug\net8.0\runtimes\win\lib\net8.0\System.Data.SqlClient.dll
