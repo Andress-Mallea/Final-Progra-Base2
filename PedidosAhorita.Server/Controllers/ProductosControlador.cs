@@ -4,6 +4,7 @@ using PedidosAhorita.Server.Tablas; // Tus modelos SQL (incluye Producto)
 using PedidosAhorita.Server.Tablas.MongoDBModels; // **Importante: Importa tu modelo ProductoDetalleMongo**
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using PedidosAhorita.Server.DTOs;
 using System.Linq;
 using MongoDB.Bson; // Necesario para tipos Bson, aunque no directamente usado en este controlador, es útil para MongoDB
 using System; // Para Exception y Console.WriteLine, que son útiles para depuración
@@ -37,7 +38,7 @@ namespace PedidosAhorita.Server.Controllers
                 // Obtiene los productos base de SQL Server
                 var productosSQL = _productoRepositorySQL.GetAll(); 
 
-                var productosCombinados = new List<Producto>();
+                var productosCombinados = new List<RegistroProducto>();
                 foreach (var prodSQL in productosSQL)
                 {
                     // Intenta buscar los detalles adicionales de este producto en MongoDB usando su ProductoID
@@ -51,16 +52,16 @@ namespace PedidosAhorita.Server.Controllers
                         Console.WriteLine($"Sin coincidencia en MongoDB para ProductoID {prodSQL.ProductoID}");
                     }
                     // Crea un nuevo objeto Producto que combine los campos de SQL Server y los de MongoDB
-                    productosCombinados.Add(new Producto
+                    productosCombinados.Add(new RegistroProducto
                     {
                         ProductoID = prodSQL.ProductoID,
                         VendedorID = prodSQL.VendedorID,
                         Nombre = prodSQL.Nombre,
                         Precio = prodSQL.Precio,
-                        Cantidad = prodSQL.Cantidad, // Asumimos que 'Cantidad' viene de SQL Server para el stock
+                        Cantidad = prodSQL.StockDisponible, // Asumimos que 'Cantidad' viene de SQL Server para el stock
                         StockDisponible = prodSQL.StockDisponible, // Mantener si existe como campo diferente en SQL
-                        Activo = prodSQL.Activo,
-                        FechaCreacion = prodSQL.FechaCreacion,
+                        Activo = true,
+                        FechaCreacion = DateTime.UtcNow,
                         // Asigna Descripcion e Imagen desde MongoDB si se encontraron (usa el operador ?. para seguridad nula)
                         Descripcion = prodMongo?.Descripcion,
                         Imagen = prodMongo?.Imagen
@@ -95,16 +96,16 @@ namespace PedidosAhorita.Server.Controllers
                 var prodMongo = _productoMongoRepository.FilterBy(p => p.ProductoID == productoSQL.ProductoID).FirstOrDefault();
 
                 // Crea un nuevo objeto Producto y combina los datos
-                Producto productoCombinado = new Producto
+                RegistroProducto productoCombinado = new RegistroProducto
                 {
                     ProductoID = productoSQL.ProductoID,
                     VendedorID = productoSQL.VendedorID,
                     Nombre = productoSQL.Nombre,
                     Precio = productoSQL.Precio,
-                    Cantidad = productoSQL.Cantidad,
+                    Cantidad = productoSQL.StockDisponible,
                     StockDisponible = productoSQL.StockDisponible,
-                    Activo = productoSQL.Activo,
-                    FechaCreacion = productoSQL.FechaCreacion,
+                    Activo = true,
+
                     // Asigna Descripcion e Imagen desde MongoDB si se encontraron
                     Descripcion = prodMongo?.Descripcion,
                     Imagen = prodMongo?.Imagen
@@ -120,11 +121,78 @@ namespace PedidosAhorita.Server.Controllers
                 return StatusCode(500, $"Error interno del servidor: {ex.Message}");
             }
         }
+         [HttpGet("ByVendedor/{vendedorId}")]
+        public ActionResult<List<Producto>> GetProductosByVendedorId(int vendedorId)
+        {
+            // Asumo que tu repositorio _productoRepository.GetAll() devuelve una lista
+            // y que tu modelo Producto tiene una propiedad VendedorID
+            var productosDelVendedor = _productoRepositorySQL.GetAll()
+                                                         .Where(p => p.VendedorID == vendedorId)
+                                                         .ToList();
 
+            if (productosDelVendedor == null || !productosDelVendedor.Any())
+            {
+                return NotFound($"No se encontraron productos para el vendedor con ID {vendedorId}.");
+            }
+
+            return Ok(productosDelVendedor);
+        }
         // POST: api/Productos
         // Añade un nuevo producto a SQL Server y sus detalles a MongoDB
+        [HttpPost("agregar")]
+        public IActionResult AgregarProducto([FromBody] ProductoConDetalleDto dto)
+        {
+            Console.WriteLine($"DTO recibido: Nombre={dto.Nombre}, Precio={dto.Precio}, VendedorID={dto.VendedorID}, Cantidad={dto.Cantidad}, StockDisponible={dto.StockDisponible}, Descripcion={dto.Descripcion}, Imagen={dto.Imagen}");
+            try
+            {
+                // 1. Guardar en SQL Server
+                var producto = new Producto
+                {
+                    Nombre = dto.Nombre,
+                    Precio = dto.Precio,
+                    VendedorID = dto.VendedorID,
+                    StockDisponible = 1,
+                };
+                Console.WriteLine($"ProductoID generado: {dto.VendedorID}");
+                AlmacenDeDependecias.ProductoTabla.Add(producto);
+                Console.WriteLine($"ProductoID generado: {producto.ProductoID}");
+                int productoID = producto.ProductoID; // Asumimos que ProductoID es auto-incremental y se asigna al añadir
+                // 2. Guardar detalles en MongoDB
+                var productoDetalle = new ProductoDetalleMongo
+                {
+                    ProductoID = productoID, // Usar el ID asignado por SQL Server
+                    Nombre = dto.Nombre,
+                    Precio = (double)dto.Precio,
+                    Cantidad = 40,
+                    Descripcion = dto.Descripcion,
+                    Imagen = dto.Imagen
+                };
+                AlmacenDeDependecias.Mongo.GetRepository<ProductoDetalleMongo>("productos")
+                    .InsertOne(productoDetalle);
+
+                return Ok(new { mensaje = "Producto agregado correctamente." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error al agregar producto: {ex.Message}");
+            }
+        }
+
+        // POST: api/Productos
+
+// DTO para recibir datos del frontend
+public class ProductoConDetalleDto
+{
+    public string Nombre { get; set; }
+    public decimal Precio { get; set; }
+    public int VendedorID { get; set; }
+    public int Cantidad { get; set; }
+    public int StockDisponible { get; set; }
+    public string Descripcion { get; set; }
+    public string Imagen { get; set; }
+}
         [HttpPost]
-        public ActionResult<Producto> PostProducto(Producto producto)
+        public ActionResult<Producto> PostProducto(RegistroProducto producto)
         {
             if (!ModelState.IsValid)
             {
@@ -164,7 +232,7 @@ namespace PedidosAhorita.Server.Controllers
         // PUT: api/Productos/101
         // Actualiza un producto en SQL Server y sus detalles en MongoDB
         [HttpPut("{id}")]
-        public IActionResult PutProducto(int id, Producto producto)
+        public IActionResult PutProducto(int id, RegistroProducto producto)
         {
             if (id != producto.ProductoID)
             {
