@@ -58,6 +58,8 @@
       <img [src]="product.imagen || 'https://placehold.co/300x200/cccccc/333333?text=Producto'" alt="{{ product.nombre }}">
       <h3>{{ product.nombre }}</h3>
       <p>{{ product.descripcion }}</p>
+      <p>Stock disponible<p>
+      <p>{{ product.stockDisponible }}<p>
       <p class="product-price">${{ product.precio?.toFixed(2) }}</p>
       <div class="product-actions">
         <button class="add-to-cart-button" (click)="addToCart(product)">Agregar al carrito</button>
@@ -77,6 +79,8 @@
       <img [src]="product.imagen || 'https://placehold.co/300x200/cccccc/333333?text=Producto'" alt="{{ product.nombre }}">
       <h3>{{ product.nombre }}</h3>
       <p>{{ product.descripcion }}</p>
+      <p>Stock disponible<p>
+      <p>{{ product.stockDisponible }}<p>
       <p class="product-price">${{ product.precio?.toFixed(2) }}</p>
       <div class="product-actions">
         <button class="add-to-cart-button" (click)="addToCart(product)">Agregar al carrito</button>
@@ -126,6 +130,10 @@
       <input type="number" id="productPrice" name="newProductPrice" [(ngModel)]="newProductPrice" min="0.01" step="0.01" required>
     </div>
     <div class="form-group">
+      <label for="productPrice">Stock:</label>
+      <input type="number" id="productStock" name="newProductStock" [(ngModel)]="newProductStock" min="1.00" step="1.00" required>
+    </div>
+    <div class="form-group">
       <label for="productImage">Imagen del Producto (URL):</label>
       <input type="text" id="productImage" name="newProductImage" [(ngModel)]="newProductImage">
     </div>
@@ -156,6 +164,7 @@
   <h2>{{ selectedProduct.nombre }}</h2>
   <img [src]="selectedProduct.imagen || 'https://placehold.co/600x400/cccccc/333333?text=' + selectedProduct.nombre" alt="{{ selectedProduct.nombre }}" class="detail-image">
   <p><strong>Descripción:</strong> {{ selectedProduct.descripcion }}</p>
+  <p><strong>Stock disponible:</strong>{{ selectedProduct.stockDisponible }}</p>
   <p class="product-price">${{ selectedProduct.precio?.toFixed(2) }}</p>
   <div class="detail-actions">
     <button (click)="addToCart(selectedProduct)">Agregar al Carrito</button>
