@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms'; // Importa FormsModule para ngMode
 import { HttpClientModule } from '@angular/common/http'; // Mantenerlo por si se usa en el futuro, aunque los servicios son mock
 import { forkJoin, Observable } from 'rxjs'; // Import forkJoin and Observable
 import { map } from 'rxjs/operators'; // Import map
-import { HttpClient } from '@angular/common/http'; // Import HttpClient
+import { HttpClient, HttpErrorResponse } from '@angular/common/http'; // Import HttpClient y HttpErrorResponse
 
 // Importa las interfaces de los modelos
 import { Producto } from './models/producto.model';
@@ -43,13 +43,6 @@ import { PedidoService } from './Tablas/pedido.service';
 // Definimos los tipos de roles para mayor claridad y seguridad de tipo
 export type UserRole = 'Cliente' | 'Empleado' | 'Vendedor' | 'Administrador' | 'Repartidor';
 
-/**
- * @type LoggedInUser
- * @description Representa el usuario actualmente autenticado, combinando las propiedades
- * de la interfaz base Usuario con las propiedades opcionales de Cliente, Empleado y Tienda,
- * y añadiendo una propiedad `userType` para identificar el rol principal del usuario en el frontend.
- * Las propiedades son en PascalCase para coincidir con los modelos C#.
- */
 export type LoggedInUser = Usuario & Partial<Cliente> & Partial<Empleado> & Partial<Tienda> & { userType: UserRole };
 
 
@@ -296,24 +289,15 @@ export class AppComponent implements OnInit {
         this.showShoppingCartMenu = true;
         break;
       case 'Vender':
-        // Lógica para el botón "Vender":
-        if (this.loggedInUser) {
-          if (this.loggedInUser.userType === 'Vendedor') {
-            this.showSellMenu = true; // Mostrar formulario de venta directamente
-          } else if (this.loggedInUser.userType === 'Cliente') {
-            // Si es cliente, mostrar el menú para convertir a vendedor
-            this.showConvertToSellerMenu = true;
-            this.currentActiveLink = 'ConvertToSeller'; // Nuevo estado para el enlace activo
-          } else {
-            alert('Debes ser un vendedor para subir productos. Por favor, inicia sesión o regístrate como vendedor.');
-            this.showLoginMenu = true; // Opcional: Redirigir a login
-            this.currentActiveLink = 'Iniciar Sesion';
-          }
-        } else {
-          alert('Debes iniciar sesión para vender productos.');
-          this.showLoginMenu = true; // Redirigir a login
-          this.currentActiveLink = 'Iniciar Sesion';
-        }
+        // Si NO hay usuario logueado o NO es vendedor, redirige a login y muestra alerta
+  if (!this.loggedInUser || this.loggedInUser.userType !== 'Vendedor') {
+    alert('Debes ser Vendedor para poder vender. Por favor, inicia sesión o regístrate como vendedor.');
+    this.showLoginMenu = true;
+    this.currentActiveLink = 'Iniciar Sesion';
+  } else {
+    // Si es vendedor, muestra el formulario de venta
+    this.showSellMenu = true;
+  }
         break;
       case 'Iniciar Sesion':
         this.showLoginMenu = true;
@@ -361,7 +345,7 @@ export class AppComponent implements OnInit {
       productoID: 0, // El ID será asignado por el backend
       nombre: this.newProductName,
       descripcion: this.newProductDescription,
-      precio: this.newProductPrice ?? 0,
+      precio: this.newProductPrice,
       imagen: this.newProductImage,
       vendedorID: sellerId,
       cantidad: 1, // O el campo que corresponda en tu modelo
@@ -385,7 +369,7 @@ export class AppComponent implements OnInit {
       },
       (error: any) => {
         console.error('Error al subir producto:', error);
-        alert('Hubo un error al subir el producto.');
+        alert('Hubo un error al subir el producto.' + error);
       }
     );
   }
@@ -422,15 +406,74 @@ export class AppComponent implements OnInit {
       return;
     }
 
-    alert('¡Pago simulado exitoso!');
-    this.purchasedProducts = [...this.purchasedProducts, ...this.cartItems];
-    this.cartItems = [];
-    this.cardNumber = '';
-    this.cardName = '';
-    this.cardExpiry = '';
-    this.cardCVC = '';
-    this.closePaymentMenu();
-    this.setActiveLink('Inicio');
+    if (!this.loggedInUser || this.loggedInUser.userType !== 'Cliente') {
+      alert('Debes iniciar sesión como cliente para realizar una compra.');
+      return;
+    }
+
+    const clienteID = this.loggedInUser.UsuarioID;
+    const tipoEntrega = 'Domicilio'; // O puedes permitir que el usuario elija el tipo de entrega
+
+    let allPurchasesSuccessful = true;
+    let errorMessage = '';
+
+    // Utiliza un array para almacenar todas las observables de las compras
+    const purchaseObservables: Observable<any>[] = [];
+
+    this.cartItems.forEach(producto => {
+        const compraRequest = {
+            ClienteID: clienteID,
+            ProductoID: producto.productoID,
+            Cantidad: 1, // Asumiendo que la cantidad es 1 por cada item en el carrito
+            TipoEntrega: tipoEntrega
+        };
+
+        // Añade cada observable de la compra al array
+        purchaseObservables.push(
+            this.http.post('http://localhost:5257/api/ProductosControlador/realizar-compra', compraRequest).pipe(
+                map((response: any) => {
+                    console.log('Compra registrada:', response);
+                    return { success: true, product: producto };
+                })
+            )
+        );
+    });
+
+    // Usa forkJoin para esperar a que todas las compras se completen
+    forkJoin(purchaseObservables).subscribe(
+        (results) => {
+            // Todos los resultados exitosos, pero aún debemos verificar errores de Bad Request
+            results.forEach(res => {
+                if (!res.success) {
+                    allPurchasesSuccessful = false;
+                    errorMessage += `Error al comprar ${res.product.nombre}. `;
+                }
+            });
+
+            if (allPurchasesSuccessful) {
+                alert('¡Pago y compra realizados exitosamente para todos los productos!');
+                this.purchasedProducts = [...this.purchasedProducts, ...this.cartItems];
+                this.cartItems = [];
+                this.cardNumber = '';
+                this.cardName = '';
+                this.cardExpiry = '';
+                this.cardCVC = '';
+                this.closePaymentMenu();
+                this.setActiveLink('Inicio');
+            } else {
+                alert(`Algunas compras no se pudieron completar: ${errorMessage}`);
+                // Aquí podrías decidir qué hacer con los productos que fallaron
+            }
+        },
+        (error: HttpErrorResponse) => {
+            console.error('Error general al procesar las compras:', error);
+            if (error.error && error.error.error) { // El campo 'error' viene del backend con el mensaje de SqlException
+                alert(`Error al registrar la compra: ${error.error.error}`);
+            } else {
+                alert('Ocurrió un error al procesar el pago. Por favor, inténtalo de nuevo.');
+            }
+        }
+    );
   }
 
   closePaymentMenu(): void {
@@ -561,39 +604,48 @@ resetRegistrationForm(): void {
 
   // Nuevo método para que un cliente convierta su cuenta a vendedor
   convertAccountToSeller(): void {
-  if (!this.loggedInUser || this.loggedInUser.userType !== 'Cliente') {
-    alert('Esta opción solo está disponible para clientes.');
-    return;
-  }
-  if (!this.convertToSellerNombreTienda) {
-    alert('Por favor, ingresa el nombre de tu tienda.');
-    return;
-  }
+    if (!this.loggedInUser || this.loggedInUser.userType !== 'Cliente') {
+      alert('Esta opción solo está disponible para clientes.');
+      return;
+    }
 
-  // Prepara el DTO para el backend
+    if (!this.convertToSellerNombreTienda) {
+      alert('Por favor, ingresa el nombre de tu tienda.');
+      return;
+    }
 
-  console.log('UsuarioID que se enviará:', this.loggedInUser?.UsuarioID);
-  const dto = {
-    usuarioID: this.loggedInUser.UsuarioID,
-    nombreDeTienda: this.convertToSellerNombreTienda,
-    cuentaDeBanco: this.convertToSellerCuentaBanco,
-    // Si necesitas enviar el ID del rol de vendedor, agrégalo aquí
-    // rolVendedorID: ...
-  };
-  console.log('DTO que se enviará:', dto);
-  this.http.post('http://localhost:5257/api/UsuariosControlador/convertir-a-vendedor', dto)
-    .subscribe(
-      (response: any) => {
-        alert('¡Tu cuenta ha sido convertida a vendedor exitosamente!');
-        // Opcional: Actualiza el estado del usuario en el frontend
-        this.loggedInUser!.userType = 'Vendedor';
-        this.setActiveLink('Vender');
-      },
-      (error: any) => {
-        console.error('Error al convertir a vendedor:', error);
-        alert('Error al convertir la cuenta a vendedor.');
+    // Obtener el RolID de 'Vendedor'
+    this.rolDeUsuarioService.getRolesDeUsuario().subscribe(roles => {
+      const vendedorRol = roles.find(r => r.NombreRol === 'Vendedor');
+      if (vendedorRol) {
+        // Verificar si el UsuarioRol ya existe para evitar duplicados
+        this.usuarioRolService.getUsuarioRolByIds(this.loggedInUser!.UsuarioID, vendedorRol.RolID).subscribe(existingUserRol => {
+          if (existingUserRol) {
+            console.log('El usuario ya tiene el rol de Vendedor.');
+            // Si ya tiene el rol, simplemente actualizar su información de Tienda si es necesario o continuar
+            this.updateOrCreateTiendaForConversion(this.loggedInUser!, vendedorRol.RolID);
+          } else {
+            // Asignar el rol de vendedor al usuario existente
+            const newUsuarioRol: UsuarioRol = {
+              UsuarioID: this.loggedInUser!.UsuarioID,
+              RolID: vendedorRol.RolID
+            };
+            this.usuarioRolService.addUsuarioRol(newUsuarioRol).subscribe(
+              () => {
+                console.log('Rol de Vendedor asignado al usuario:', this.loggedInUser!.Email);
+                this.updateOrCreateTiendaForConversion(this.loggedInUser!, vendedorRol.RolID);
+              },
+              (error: any) => {
+                console.error('Error al asignar rol de vendedor:', error);
+                alert('Error al convertir la cuenta a vendedor: no se pudo asignar el rol.');
+              }
+            );
+          }
+        });
+      } else {
+        alert('El rol "Vendedor" no se encontró en la configuración del sistema.');
       }
-    );
+    });
   }
 
   private updateOrCreateTiendaForConversion(user: LoggedInUser, vendedorRolId: number): void {
@@ -756,47 +808,5 @@ resetRegistrationForm(): void {
     this.selectedOrder = null; // Limpiar pedido seleccionado
     alert('Has cerrado sesión.');
     this.setActiveLink('Inicio');
-  }
-  // Supón que tienes un formulario para capturar estos datos
-agregarProducto(): void {
-  console.log('Usuario logueado:', this.loggedInUser);
-  if (!this.loggedInUser) {
-
-    return;
-  }
-
-  const dto = {
-      Nombre: this.newProductName,
-      Precio: this.newProductPrice ?? 0,
-      VendedorID: this.loggedInUser.UsuarioID,
-      Cantidad: 1, // o el valor que corresponda
-      StockDisponible: 1, // o el valor que corresponda
-      Descripcion: this.newProductDescription,
-      Imagen: this.newProductImage
-    };
-    console.log('DTO que se enviará:', dto);
-  this.http.post('http://localhost:5257/api/ProductosControlador/agregar', dto)
-    .subscribe(
-      (response: any) => {
-        alert('¡Producto agregado correctamente!');
-        // Opcional: recarga la lista de productos
-      },
-      (error: any) => {
-        alert('Error al agregar producto');
-        console.error(error);
-      }
-    );
-}
-  cargarProductosDelVendedor(vendedorId: number): void {
-    this.productoService.getProductsByVendedorId(vendedorId).subscribe(
-      (productos: Producto[]) => {
-        this.sellingProducts = productos;
-        console.log('Productos del vendedor cargados:', this.sellingProducts);
-      },
-      (error: any) => {
-        console.error('Error al cargar productos del vendedor:', error);
-        this.sellingProducts = []; // Limpiar si hay un error
-      }
-    );
   }
 }

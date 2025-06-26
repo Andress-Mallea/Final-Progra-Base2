@@ -112,7 +112,7 @@
 <!-- Sell Product Menu - Visible only when currentActiveLink === 'Vender' -->
 <section id="sell-product-menu" class="container" *ngIf="currentActiveLink === 'Vender'">
   <h2>Subir un Nuevo Producto</h2>
-  <form (ngSubmit)="agregarProducto()" #sellForm="ngForm">
+  <form #sellForm="ngForm">
     <div class="form-group">
       <label for="productName">Nombre del Producto:</label>
       <input type="text" id="productName" name="newProductName" [(ngModel)]="newProductName" required>
@@ -373,25 +373,21 @@
     </button>
   </div>
 
-  <!-- Productos que el usuario está vendiendo -->
-  <h3 class="section-title">Productos que estás vendiendo ({{ sellingProducts.length }})</h3>
-    <ul *ngIf="sellingProducts.length > 0; else noSellingProducts" class="product-list-container">
+  <!-- Productos que el usuario está vendiendo: SOLO para vendedores -->
+  <div *ngIf="user.userType === 'Vendedor'">
+    <h3 class="section-title">Productos que estás vendiendo ({{ sellingProducts.length }})</h3>
+    <ul *ngIf="sellingProducts.length > 0; else noSellingProducts">
       <li *ngFor="let product of sellingProducts" class="product-list-item">
         <div class="item-details">
           <strong>{{ product.nombre }}</strong> - ${{ product.precio?.toFixed(2) }}
           <p>{{ product.descripcion }}</p>
-          <button class="btn btn-primary btn-sm">Editar</button>
-          <button class="btn btn-danger btn-sm">Eliminar</button>
         </div>
       </li>
     </ul>
     <ng-template #noSellingProducts>
       <p style="text-align: center; color: #ccc;">No estás vendiendo ningún producto actualmente.</p>
     </ng-template>
-    <hr>
-  <ng-template #noSellingProducts>
-    <p style="text-align: center; color: #ccc;">No estás vendiendo ningún producto actualmente.</p>
-  </ng-template>
+  </div>
 
   <!-- Productos que el usuario ha comprado -->
   <h3 class="section-title">Tus compras recientes ({{ purchasedProducts.length }})</h3>
