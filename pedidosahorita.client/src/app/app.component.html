@@ -81,6 +81,8 @@
       <p>{{ product.descripcion }}</p>
       <p>Stock disponible<p>
       <p>{{ product.stockDisponible }}<p>
+      <button class="buy-button" (click)="addFavorite(product)" style="background-color: yellow;">Agregar a Favoritos</button> 
+      <button class="buy-button" (click)="removeFavorite(product)" style="background-color: gray; color: white">Remover de Favoritos</button>
       <p class="product-price">${{ product.precio?.toFixed(2) }}</p>
       <div class="product-actions">
         <button class="add-to-cart-button" (click)="addToCart(product)">Agregar al carrito</button>
@@ -158,7 +160,6 @@
   </form>
 </section>
 
-
 <!-- Product Detail Menu - Visible only when currentActiveLink === 'ProductDetail' and a product is selected -->
 <section id="product-detail-menu" class="container" *ngIf="currentActiveLink === 'ProductDetail' && selectedProduct">
   <h2>{{ selectedProduct.nombre }}</h2>
@@ -166,6 +167,8 @@
   <p><strong>Descripción:</strong> {{ selectedProduct.descripcion }}</p>
   <p><strong>Stock disponible:</strong>{{ selectedProduct.stockDisponible }}</p>
   <p class="product-price">${{ selectedProduct.precio?.toFixed(2) }}</p>
+  <button class="buy-button" (click)="addFavorite(selectedProduct)" style="background-color: yellow;">Agregar a Favoritos</button> 
+  <button class="buy-button" (click)="removeFavorite(selectedProduct)" style="background-color: gray;">Remover de Favoritos</button>
   <div class="detail-actions">
     <button (click)="addToCart(selectedProduct)">Agregar al Carrito</button>
     <button (click)="backToStoreList()">Volver</button>
@@ -399,9 +402,9 @@
   </div>
 
   <!-- Productos que el usuario ha comprado -->
-  <h3 class="section-title">Tus compras recientes ({{ purchasedProducts.length }})</h3>
-  <ul *ngIf="purchasedProducts.length > 0; else noPurchasedProducts">
-    <li *ngFor="let product of purchasedProducts" class="product-list-item">
+  <h3 class="section-title">Tus favoritos ({{ favoritos.length }})</h3>
+  <ul *ngIf="favoritos.length > 0; else noPurchasedProducts">
+    <li *ngFor="let product of favoritos" class="product-list-item">
       <div class="item-details">
         <strong>{{ product.nombre }}</strong> - ${{ product.precio?.toFixed(2) }}
         <p>{{ product.descripcion }}</p>

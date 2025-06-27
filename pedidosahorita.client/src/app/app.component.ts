@@ -131,6 +131,8 @@ export class AppComponent implements OnInit {
   // Nueva propiedad para controlar la visibilidad del menú de productos
   showProductsMenu: boolean = false;
   registrationMessage: string = '';
+  
+  favoritos: Producto[] = []; // Nueva propiedad para almacenar productos favoritos
 
   constructor(
     private productoService: ProductoService,
@@ -809,5 +811,22 @@ resetRegistrationForm(): void {
     this.selectedOrder = null; // Limpiar pedido seleccionado
     alert('Has cerrado sesión.');
     this.setActiveLink('Inicio');
+  }
+  addFavorite(product: Producto): void {
+    if (!this.favoritos.some(fav => fav.productoID === product.productoID)) {
+      this.favoritos.push(product);
+      alert('Producto ' + product.nombre + ' añadido a favoritos:');
+    } else {
+      alert('El producto ' + product.nombre + ' ya está en favoritos:');
+    }
+  }
+  removeFavorite(product: Producto): void {
+    const index = this.favoritos.findIndex(fav => fav.productoID === product.productoID);
+    if (index !== -1) {
+      this.favoritos.splice(index, 1);
+      alert('Producto ' + product.nombre + ' eliminado de favoritos:');
+    } else {
+      alert('El producto' + product.nombre + ' no estaba en favoritos:');
+    }
   }
 }

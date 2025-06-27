@@ -18,13 +18,13 @@ namespace PedidosAhorita.Server.Controllers
     {
         private readonly InterfasGenerica<Producto> _productoRepositorySQL;
         private readonly InterfasGenericaM<ProductoDetalleMongo> _productoMongoRepository;
-
+        private readonly InterfasGenericaM<Favoritos> _favoritosMongoRepository;
         public ProductosControlador()
         {
             _productoRepositorySQL = AlmacenDeDependecias.ProductoTabla;
             _productoMongoRepository = AlmacenDeDependecias.Mongo.GetRepository<ProductoDetalleMongo>("Productos");
+            _favoritosMongoRepository = AlmacenDeDependecias.Mongo.GetRepository<Favoritos>("Favoritos"); // <-- Agrega esto
         }
-
         // GET: api/Productos
         // Obtiene todos los productos combinando datos de SQL Server y MongoDB
         [HttpGet]
@@ -289,5 +289,41 @@ namespace PedidosAhorita.Server.Controllers
                 return StatusCode(500, $"Error interno: {ex.Message}");
             }
         }
+        [HttpPost("agregar-favorito")]
+public IActionResult AgregarFavorito([FromBody] Favoritos favorito)
+{
+    if (favorito == null || favorito.UsuarioID <= 0 || favorito.ProductoID <= 0)
+        return BadRequest("Datos inválidos.");
+
+    try
+    {
+        var yaExiste = _favoritosMongoRepository.FilterBy(f => f.UsuarioID == favorito.UsuarioID && f.ProductoID == favorito.ProductoID).Any();
+        if (yaExiste)
+            return Ok(new { mensaje = "El producto ya está en favoritos." });
+
+        _favoritosMongoRepository.InsertOne(favorito);
+        return Ok(new { mensaje = "Producto agregado a favoritos correctamente." });
+    }
+    catch (Exception ex)
+    {
+        return StatusCode(500, $"Error interno: {ex.Message}");
+    }
+}
+[HttpGet("favoritos/{usuarioId}")]
+public IActionResult ObtenerFavoritos(int usuarioId)
+{
+    if (usuarioId <= 0)
+        return BadRequest("UsuarioID inválido.");
+
+    try
+    {
+        var favoritos = _favoritosMongoRepository.FilterBy(f => f.UsuarioID == usuarioId).ToList();
+        return Ok(favoritos);
+    }
+    catch (Exception ex)
+    {
+        return StatusCode(500, $"Error interno: {ex.Message}");
+    }
+}
     }
 }
